@@ -14,15 +14,15 @@ void init(int arr[][V]) {
     }
 }
 
-void addEdge(int arr[][V], int i, int j) {
-    arr[i][j] = 1;
-    arr[j][i] = 1;
+void addEdge(int arr[][V], int i, int j, int weight) {
+    arr[i][j] = weight;
+    arr[j][i] = weight;
 }
 
 void printMatrix(int arr[][V]) {
     int i, j, k;
 
-    printf("x ");
+    printf("  ");
     for (k = 0; k < V; k++) {
         printf("%d ", k);
     }

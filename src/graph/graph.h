@@ -9,7 +9,7 @@
 extern int V;
 
 void init(int arr[][V]);
-void addEdge(int arr[][V], int, int);
+void addEdge(int arr[][V], int, int, int);
 void printMatrix(int arr[][V]);
 
 #endif //P_1_GRAPH_H
