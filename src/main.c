@@ -4,7 +4,7 @@ int main() {
 
     int adjMatrix[V][V];
 
-    init(adjMatrix);
+    initGraph(adjMatrix);
     addEdge(adjMatrix, 0, 1, 1);
     addEdge(adjMatrix, 0, 2, 1);
     addEdge(adjMatrix, 1, 2, 1);

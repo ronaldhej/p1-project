@@ -8,7 +8,7 @@
 
 extern int V;
 
-void init(int arr[][V]);
+void initGraph(int arr[][V]);
 void addEdge(int arr[][V], int, int, int);
 void printMatrix(int arr[][V]);
 

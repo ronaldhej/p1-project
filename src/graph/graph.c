@@ -5,7 +5,7 @@
 
 int V = 8;
 
-void init(int arr[][V]) {
+void initGraph(int arr[][V]) {
     int i, j;
     for (i = 0; i < V; i++) {
         for (j = 0; j < V; j++) {
