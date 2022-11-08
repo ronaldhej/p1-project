@@ -19,5 +19,6 @@ struct edge {
 void initGraph(struct edge arr[][V]);
 void addEdge(struct edge arr[][V], int src, int dest, int weight, bool isAir);
 void printMatrix(struct edge arr[][V]);
+void dijkstra(struct edge arr[][V], int src, int dest);
 
 #endif //P_1_GRAPH_H
