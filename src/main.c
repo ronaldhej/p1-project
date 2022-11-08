@@ -1,17 +1,20 @@
 #include "./graph/graph.h"
 #include <stdbool.h>
 
+//Replace with travel weight formula
+int weightEquation(int x) {
+    return x;
+}
+
 int main() {
 
     struct edge adjMatrix[V][V];
 
     initGraph(adjMatrix);
-    addEdge(adjMatrix, 0, 1, 1, true);
-    addEdge(adjMatrix, 0, 2, 1, false);
-    addEdge(adjMatrix, 1, 2, 1, false);
-    addEdge(adjMatrix, 2, 3, 1, true);
+    generateRandomEdges(adjMatrix, 1234, &weightEquation);
 
     printMatrix(adjMatrix);
 
+    dijkstra(adjMatrix, 1, 4);
     return 0;
 }
