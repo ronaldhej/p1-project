@@ -1,14 +1,15 @@
 #include "./graph/graph.h"
+#include <stdbool.h>
 
 int main() {
 
-    int adjMatrix[V][V];
+    struct edge adjMatrix[V][V];
 
     initGraph(adjMatrix);
-    addEdge(adjMatrix, 0, 1, 1);
-    addEdge(adjMatrix, 0, 2, 1);
-    addEdge(adjMatrix, 1, 2, 1);
-    addEdge(adjMatrix, 2, 3, 1);
+    addEdge(adjMatrix, 0, 1, 1, true);
+    addEdge(adjMatrix, 0, 2, 1, false);
+    addEdge(adjMatrix, 1, 2, 1, false);
+    addEdge(adjMatrix, 2, 3, 1, true);
 
     printMatrix(adjMatrix);
 
