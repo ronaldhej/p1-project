@@ -12,12 +12,12 @@ extern int V;
 
 struct edge {
     int weight;
-    bool isAirport;
+    bool isInterAirport;
 };
 
 
 void initGraph(struct edge arr[][V]);
-void addEdge(struct edge arr[][V], int, int, int, bool);
+void addEdge(struct edge arr[][V], int src, int dest, int weight, bool isInterAirport);
 void printMatrix(struct edge arr[][V]);
 
 #endif //P_1_GRAPH_H
