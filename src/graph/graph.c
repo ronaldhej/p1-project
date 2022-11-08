@@ -6,7 +6,7 @@
 
 struct edge {
     int weight;
-    bool isInterAirport;
+    bool isAir;
 };
 
 //V is number of vertices
@@ -17,16 +17,16 @@ void initGraph(struct edge arr[][V]) {
     for (i = 0; i < V; i++) {
         for (j = 0; j < V; j++) {
             arr[i][j].weight = 0;
-            arr[i][j].isInterAirport = false;
+            arr[i][j].isAir = false;
         }
     }
 }
 
-void addEdge(struct edge arr[][V], int src, int dest, int weight, bool isInterAirport) {
+void addEdge(struct edge arr[][V], int src, int dest, int weight, bool isAir) {
     arr[src][dest].weight = weight;
     arr[src][dest].weight = weight;
-    arr[src][dest].isInterAirport = isInterAirport;
-    arr[src][dest].isInterAirport = isInterAirport;
+    arr[src][dest].isAir = isAir;
+    arr[src][dest].isAir = isAir;
 }
 
 
