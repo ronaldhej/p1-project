@@ -1,18 +1,28 @@
 #include "./graph/graph.h"
 #include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-// Replace with travel weight formula
-int weightEquation(int x) { return x; }
+#define SEED 320
+
+int randomTimeInTransit() {
+    return (rand() % 300) + 60;
+}
 
 int main() {
 
-  struct edge adjMatrix[V][V];
+  Edge adjMatrix[V][V];
 
   initGraph(adjMatrix);
-  generateRandomEdges(adjMatrix, 1234, &weightEquation);
+  generateRandomEdges(adjMatrix, 1234, &randomTimeInTransit);
 
   printMatrix(adjMatrix);
 
-  dijkstra(adjMatrix, 1, 4);
+
+    for (int i = 1; i <= 50; i++) {
+        int travelTime = generateWeight(adjMatrix[i][0]);
+        printf("Total travel time for node%d is %d min.\n", i, travelTime);
+    }
+
   return 0;
 }
