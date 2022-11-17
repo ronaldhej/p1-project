@@ -1,4 +1,5 @@
 #include "./graph/graph.h"
+#include "./draw/draw.h"
 #include <stdbool.h>
 
 // Replace with travel weight formula
