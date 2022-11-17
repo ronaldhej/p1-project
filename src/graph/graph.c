@@ -9,33 +9,69 @@
 #define MAX_EDGES 200
 #define MAX_WEIGHT 150
 
-struct edge {
-  int weight;
+typedef struct {
+  int timeInTransit;
   bool isAir;
-};
+} Edge;
+
+typedef struct {
+    int ID;
+    char Title;
+} Vertex;
+
+typedef struct {
+    int timeTo;
+    int timeDep;
+    int timeIn;
+    int timeArr;
+    int timeFrom;
+} NodeWeight;
+
+// Replace with travel timeInTransit formula
+int generateWeight(Edge edge) {
+    //NodeWeight node[nodeCount];
+
+
+    //node[nodeCount].timeTo = 0;
+    //node[nodeCount].timeDep = 0;
+    int timeIn = edge.timeInTransit;
+    //node[nodeCount].timeArr = 0;
+    //node[nodeCount].timeFrom = 0;
+
+
+    //bugs out every 4th iteration, resets i to 0
+    int weight = 0;//node[nodeCount].timeTo + node[nodeCount].timeDep + node[nodeCount].timeIn + node[nodeCount].timeArr + node[nodeCount].timeFrom;
+
+    return weight;
+}
+
+
+
+
+
 
 // V is number of vertices
 int V = 10;
 
-void initGraph(struct edge arr[][V]) {
+void initGraph(Edge arr[][V]) {
   int i, j;
   for (i = 0; i < V; i++) {
     for (j = 0; j < V; j++) {
-      arr[i][j].weight = 0;
+      arr[i][j].timeInTransit = 0;
       arr[i][j].isAir = false;
     }
   }
 }
 
-void addEdge(struct edge arr[][V], int src, int dest, int weight, bool isAir) {
-  arr[src][dest].weight = weight;
-  arr[dest][src].weight = weight;
+void addEdge(Edge arr[][V], int src, int dest, int weight, bool isAir) {
+  arr[src][dest].timeInTransit = weight;
+  arr[dest][src].timeInTransit = weight;
   arr[src][dest].isAir = isAir;
   arr[dest][src].isAir = isAir;
 }
 
-struct edge generateRandomEdges(struct edge arr[][V], int seed,
-                                int (*equation)(int)) {
+Edge generateRandomEdges(Edge arr[][V], int seed,
+                         int (*equation)(int)) {
   int numEdge;
   srand(seed);
 
@@ -55,7 +91,7 @@ struct edge generateRandomEdges(struct edge arr[][V], int seed,
   }
 }
 
-void printMatrix(struct edge arr[][V]) {
+void printMatrix(Edge arr[][V]) {
   int i, j, k;
 
   printf("  ");
@@ -66,7 +102,7 @@ void printMatrix(struct edge arr[][V]) {
   for (i = 0; i < V; i++) {
     printf("%d ", i);
     for (j = 0; j < V; j++) {
-      printf("%d ", arr[i][j].weight);
+      printf("%d ", arr[i][j].timeInTransit);
     }
     printf("\n");
   }
@@ -91,7 +127,7 @@ void printSolution(int dist[]) {
   }
 }
 
-void dijkstra(struct edge arr[][V], int src, int dest) {
+void dijkstra(Edge arr[][V], int src, int dest) {
   int dist[V];
   printf("src: %d dest: %d\n", src, dest);
 
@@ -110,9 +146,9 @@ void dijkstra(struct edge arr[][V], int src, int dest) {
       break;
     }
     for (int v = 0; v < V; v++) {
-      if (!sptSet[v] && arr[u][v].weight && dist[u] != INT_MAX &&
-          dist[u] + arr[u][v].weight < dist[v]) {
-        dist[v] = dist[u] + arr[u][v].weight;
+      if (!sptSet[v] && arr[u][v].timeInTransit && dist[u] != INT_MAX &&
+          dist[u] + arr[u][v].timeInTransit < dist[v]) {
+        dist[v] = dist[u] + arr[u][v].timeInTransit;
       }
     }
   }
