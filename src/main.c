@@ -1,5 +1,8 @@
+
 #include "./graph/graph.h"
+#include "./utility/utility.h"
 #include <stdbool.h>
+
 
 // Replace with travel weight formula
 int weightEquation(int x) { return x; }
@@ -7,6 +10,8 @@ int weightEquation(int x) { return x; }
 int main() {
 
   struct edge adjMatrix[V][V];
+
+  printStartingText();
 
   initGraph(adjMatrix);
   generateRandomEdges(adjMatrix, 1234, &weightEquation);
