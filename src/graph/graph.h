@@ -15,11 +15,12 @@ typedef struct {
     bool isAir;
 } Edge;
 
-int generateWeight(Edge edge);
-void initGraph(Edge arr[][V]);
-void addEdge(Edge arr[][V], int src, int dest, int weight, bool isAir);
-Edge generateRandomEdges(Edge arr[][V], int seed, int (*equation)(int));
-void printMatrix(Edge arr[][V]);
+
 void dijkstra(Edge arr[][V], int src, int dest);
+
+void randomConnectedGraph(int v,
+                            int e,
+                            int maxWgt,
+                            char *outFile);
 
 #endif //P_1_GRAPH_H

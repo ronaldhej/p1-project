@@ -11,18 +11,8 @@ int randomTimeInTransit() {
 
 int main() {
 
-  Edge adjMatrix[V][V];
-
-  initGraph(adjMatrix);
-  generateRandomEdges(adjMatrix, 1234, &randomTimeInTransit);
-
-  printMatrix(adjMatrix);
-
-
-    for (int i = 1; i <= 50; i++) {
-        int travelTime = generateWeight(adjMatrix[i][0]);
-        printf("Total travel time for node%d is %d min.\n", i, travelTime);
-    }
+    //V is vertices, e is number of edges, out_file is name of file to save to
+    randomConnectedGraph(100, 120, 250, "graph.txt");
 
   return 0;
 }
