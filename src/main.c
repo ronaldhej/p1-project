@@ -1,5 +1,7 @@
+
 #include "./graph/graph.h"
 #include <stdbool.h>
+
 
 // Replace with travel weight formula
 int weightEquation(int x) { return x; }
