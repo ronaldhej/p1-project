@@ -1,11 +1,13 @@
 #include <stdio.h>
 
-char option = '0';
-char startingLocation[100] = "";
-char finalDestination[100] = "";
+// Make startingLocation and finalDestination dynamic.
 
 void printStartingText() {
-    do{
+
+    char option = '0';
+    char startingLocation[100] = "";
+    char finalDestination[100] = "";
+
     printf("User options:\n"
            "t:    Calculate travel time\n"
            "Developer options:\n"
@@ -13,25 +15,20 @@ void printStartingText() {
            "Choose an option:");
 
     scanf("%c", &option);
-    if (option == 't') {
-        printf("Please enter your starting location:");
-        scanf("%s", startingLocation);
+    switch (option) {
+        case 't':
+            printf("Please enter your starting location:");
+            scanf("%s", startingLocation);
 
-        printf("\nPlease enter your final destination:");
-        scanf("%s", finalDestination);
+            printf("\nPlease enter your final destination:");
+            scanf("%s", finalDestination);
 
-        printf("Is %s -> %s your desired journey? (y/n):\n", startingLocation, finalDestination);
-    } else if (option == 'g') {
-        printf("Generating graph"); //TO-DO Not implemented
+            printf("Is %s -> %s your desired journey? (y/n):\n", startingLocation, finalDestination);
+            break;
+        case 'g':
+            printf("Generating graph"); //TO-DO Not implemented
+            break;
+        default:
+            printf("Not a valid input");
     }
-    } while(option != 't' && option != 'g');
 }
-
-
-
-
-
-
-
-
-
