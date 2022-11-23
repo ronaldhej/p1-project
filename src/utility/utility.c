@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <malloc.h>
 
-// Make startingLocation and finalDestination dynamic.
-
 void printStartingText() {
 
     char option;
