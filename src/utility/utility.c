@@ -1,12 +1,16 @@
 #include <stdio.h>
+#include <malloc.h>
 
 // Make startingLocation and finalDestination dynamic.
 
 void printStartingText() {
 
-    char option = '0';
-    char startingLocation[100] = "";
-    char finalDestination[100] = "";
+    char option;
+    char *startingLocation;
+    char *finalDestination;
+
+    startingLocation = (char*) malloc(sizeof(startingLocation));
+    finalDestination = (char*) malloc(sizeof(finalDestination));
 
     printf("User options:\n"
            "t:    Calculate travel time\n"
@@ -20,10 +24,10 @@ void printStartingText() {
             printf("Please enter your starting location:");
             scanf("%s", startingLocation);
 
-            printf("\nPlease enter your final destination:");
+            printf("Please enter your final destination:");
             scanf("%s", finalDestination);
 
-            printf("Is %s -> %s your desired journey? (y/n):\n", startingLocation, finalDestination);
+            printf("Is %s -> %s your desired journey? (y/n):", startingLocation, finalDestination); //TO-DO Not implemented
             break;
         case 'g':
             printf("Generating graph"); //TO-DO Not implemented
@@ -31,4 +35,6 @@ void printStartingText() {
         default:
             printf("Not a valid input");
     }
+    free(startingLocation);
+    free(finalDestination);
 }
