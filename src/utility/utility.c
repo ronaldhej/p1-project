@@ -1,9 +1,6 @@
 #include <stdio.h>
-#include <string.h>
 
 char option = '0';
-char start[100] = "";
-char final[100] = "";
 char startingLocation[100] = "";
 char finalDestination[100] = "";
 
@@ -17,19 +14,14 @@ void printStartingText() {
     scanf("%c", &option);
     if (option == 't') {
         printf("Please enter your starting location:");
-        scanf("%s", start);
+        scanf("%s", startingLocation);
 
         printf("\nPlease enter your final destination:");
-        scanf("%s", final);
-
-        strcpy(startingLocation, start);
-        strcpy(finalDestination, final);
+        scanf("%s", finalDestination);
 
         printf("Is %s -> %s your desired journey? (y/n):\n", startingLocation, finalDestination);
-    }
-
-    if (option == 'g') {
-        printf("Generating graph");
+    } else if (option == 'g') {
+            printf("Generating graph");
     }
 }
 
