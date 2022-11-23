@@ -21,7 +21,7 @@ void printStartingText() {
 
         printf("Is %s -> %s your desired journey? (y/n):\n", startingLocation, finalDestination);
     } else if (option == 'g') {
-            printf("Generating graph");
+            printf("Generating graph"); //TO-DO Not implemented
     }
 }
 
