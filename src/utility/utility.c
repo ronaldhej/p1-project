@@ -5,6 +5,7 @@ char startingLocation[100] = "";
 char finalDestination[100] = "";
 
 void printStartingText() {
+    do{
     printf("User options:\n"
            "t:    Calculate travel time\n"
            "Developer options:\n"
@@ -21,9 +22,11 @@ void printStartingText() {
 
         printf("Is %s -> %s your desired journey? (y/n):\n", startingLocation, finalDestination);
     } else if (option == 'g') {
-            printf("Generating graph"); //TO-DO Not implemented
+        printf("Generating graph"); //TO-DO Not implemented
     }
+    } while(option != 't' && option != 'g');
 }
+
 
 
 
