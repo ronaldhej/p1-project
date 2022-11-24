@@ -1,6 +1,7 @@
 
 #include "./graph/graph.h"
 #include "./utility/utility.h"
+#include "./pathfinding/pathfinding.h"
 #include <stdbool.h>
 
 
