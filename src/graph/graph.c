@@ -96,7 +96,7 @@ void dijkstra(Edge arr[][V], int src, int dest) {
 //  Department of Computer Science and Information Systems, they have a great way of generating
 //  connected graphs
 
-void init_array(int *a, int end) {
+void initArray(int *a, int end) {
     int i;
 
     for (i = 0; i < end; i++)
@@ -123,10 +123,10 @@ void permute(int *a, int n) {
         swap(a + i + ran(n - i), a + i);
 }
 
-void print_graph(int v,
-                 int e,
-                 char *out_file,
-                 int *adj_matrix) {
+void printGraph(int v,
+                int e,
+                char *out_file,
+                Edge *adjMatrix) {
     int i, j, index;
     FILE *fp;
 
@@ -141,8 +141,8 @@ void print_graph(int v,
     for (i = 1; i < v; i++)
         for (j = i + 1; j <= v; j++) {
             index = (i - 1) * v + j - 1;
-            if (adj_matrix[index])
-                fprintf(fp, "%5d   %5d   %5d\n", i, j, adj_matrix[index]);
+            if (adjMatrix[index].timeInTransit)
+                fprintf(fp, "%5d   %5d   %5d    %d\n", i, j, adjMatrix[index].timeInTransit, adjMatrix[index].isAir);
         }
     fclose(fp);
     printf("\tGraph is written to file %s.\n", out_file);
@@ -154,9 +154,10 @@ void randomConnectedGraph(int v,
                             int e,
                             int maxWgt,
                             char *outFile) {
-    int i, j, count, index, *adjMatrix, *tree;
+    int i, j, count, index, *tree;
+    Edge *adjMatrix;
 
-    if ((adjMatrix = (int *) calloc(v * v, sizeof(int)))
+    if ((adjMatrix = (Edge *) calloc(v * v, sizeof(Edge)))
         == NULL) {
         printf("Not enough room for this size graph\n");
         return;
@@ -171,7 +172,7 @@ void randomConnectedGraph(int v,
     printf("\n\tBeginning construction of graph.\n");
 
     /*  Generate a random permutation in the array tree. */
-    init_array(tree, v);
+    initArray(tree, v);
     permute(tree, v);
 
     /*  Next generate a random spanning tree.
@@ -184,8 +185,8 @@ void randomConnectedGraph(int v,
 
     for (i = 1; i < v; i++) {
         j = ran(i);
-        adjMatrix[tree[i] * v + tree[j]] =
-        adjMatrix[tree[j] * v + tree[i]] = 1 + ran(maxWgt);
+        adjMatrix[tree[i] * v + tree[j]].timeInTransit =
+        adjMatrix[tree[j] * v + tree[i]].timeInTransit = 1 + ran(maxWgt);
     }
 
     /* Add additional random edges until achieving at least desired number */
@@ -201,13 +202,14 @@ void randomConnectedGraph(int v,
             swap(&i, &j);
 
         index = i * v + j;
-        if (!adjMatrix[index]) {
-            adjMatrix[index] = 1 + ran(maxWgt);
+        if (!adjMatrix[index].timeInTransit) {
+            adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
+            adjMatrix[index].isAir = true;
             count++;
         }
     }
 
-    print_graph(v, count, outFile, adjMatrix);
+    printGraph(v, count, outFile, adjMatrix);
 
     free(tree);
     free(adjMatrix);
