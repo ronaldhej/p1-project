@@ -142,7 +142,7 @@ void printGraph(int v,
         for (j = i + 1; j <= v; j++) {
             index = (i - 1) * v + j - 1;
             if (adjMatrix[index].timeInTransit)
-                fprintf(fp, "%5d   %5d   %5d    %d\n", i, j, adjMatrix[index].timeInTransit, adjMatrix[index].isAir);
+                fprintf(fp, "%5d   %5d   %5d\n", i, j, adjMatrix[index].timeInTransit);
         }
     fclose(fp);
     printf("\tGraph is written to file %s.\n", out_file);
@@ -153,6 +153,8 @@ void printGraph(int v,
 void randomConnectedGraph(int v,
                             int e,
                             int maxWgt,
+                            int airportNum,
+                            int maxAirRoutesPerHub,
                             char *outFile) {
     int i, j, count, index, *tree;
     Edge *adjMatrix;
@@ -190,7 +192,6 @@ void randomConnectedGraph(int v,
     }
 
     /* Add additional random edges until achieving at least desired number */
-
     for (count = v - 1; count < e;) {
         i = ran(v);
         j = ran(v);
@@ -204,9 +205,35 @@ void randomConnectedGraph(int v,
         index = i * v + j;
         if (!adjMatrix[index].timeInTransit) {
             adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
-            adjMatrix[index].isAir = true;
             count++;
         }
+    }
+
+    //Airport hub adding loop
+    for(count = 0; count < airportNum;) {
+        int numRoutes = ran(maxAirRoutesPerHub);
+        i = ran(v);
+
+        // Loop to add multiple routes from same airport hub
+        for (int currRoutes = 0; currRoutes < numRoutes;) {
+            j = ran(v);
+
+            if (i == j)
+                continue;
+
+            if (i > j)
+                swap(&i, &j);
+            index = i * v + j;
+            //Might not allow air and train route for same a -> b
+            if(!adjMatrix[index].timeInTransit) {
+                adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
+                adjMatrix[index].isAir = true;
+                currRoutes++;
+            }
+        }
+
+        count++;
+
     }
 
     printGraph(v, count, outFile, adjMatrix);

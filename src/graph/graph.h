@@ -19,8 +19,10 @@ typedef struct {
 void dijkstra(Edge arr[][V], int src, int dest);
 
 void randomConnectedGraph(int v,
-                            int e,
-                            int maxWgt,
-                            char *outFile);
+                          int e,
+                          int maxWgt,
+                          int airportNum,
+                          int maxAirRoutesPerHub,
+                          char *outFile);
 
 #endif //P_1_GRAPH_H
