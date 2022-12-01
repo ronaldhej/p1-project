@@ -230,7 +230,6 @@ void randomConnectedGraph(int v,
             if (i > j)
                 swap(&i, &j);
             index = i * v + j;
-            //Might not allow air and train route for same a -> b
             if(!adjMatrix[index].timeInTransit && !adjMatrix[index].isAir) {
                 adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
                 adjMatrix[index].isAir = true;
