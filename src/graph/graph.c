@@ -136,14 +136,20 @@ void printGraph(int v,
     }
     printf("\n\tWriting graph to file %s.\n", out_file);
 
-    fprintf(fp, "%5d   %5d\n", v, e);
-
+    fprintf(fp, "graph G {\n");
+    fprintf(fp, "layout=fdp\n");
     for (i = 1; i < v; i++)
         for (j = i + 1; j <= v; j++) {
             index = (i - 1) * v + j - 1;
-            if (adjMatrix[index].timeInTransit)
-                fprintf(fp, "%5d   %5d   %5d\n", i, j, adjMatrix[index].timeInTransit);
+            if (adjMatrix[index].timeInTransit) {
+                if (adjMatrix[index].isAir) {
+                    fprintf(fp, "%5d -- %5d [label=%5d, color=red]\n", i, j, adjMatrix[index].timeInTransit);
+                } else {
+                    fprintf(fp, "%5d -- %5d [label=%5d]\n", i, j, adjMatrix[index].timeInTransit);
+                }
+            }
         }
+    fprintf(fp, "}");
     fclose(fp);
     printf("\tGraph is written to file %s.\n", out_file);
 }
@@ -225,7 +231,7 @@ void randomConnectedGraph(int v,
                 swap(&i, &j);
             index = i * v + j;
             //Might not allow air and train route for same a -> b
-            if(!adjMatrix[index].timeInTransit) {
+            if(!adjMatrix[index].timeInTransit && !adjMatrix[index].isAir) {
                 adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
                 adjMatrix[index].isAir = true;
                 currRoutes++;
