@@ -12,7 +12,7 @@ int randomTimeInTransit() {
 int main() {
 
     //V is vertices, e is number of edges, out_file is name of file to save to
-    randomConnectedGraph(25, 30, 250, 2, 8,"graph.txt");
+    randomConnectedGraph(100, 120, 250, 3, 10,"graph.gv");
 
   return 0;
 }
