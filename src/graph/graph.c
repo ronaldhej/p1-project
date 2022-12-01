@@ -137,15 +137,16 @@ void printGraph(int v,
     printf("\n\tWriting graph to file %s.\n", out_file);
 
     fprintf(fp, "graph G {\n");
-    fprintf(fp, "layout=fdp\n");
+    fprintf(fp, "\tlayout=fdp\n\tsplines=true\n\tK=2\n\tnode [shape=circle]\n");
     for (i = 1; i < v; i++)
         for (j = i + 1; j <= v; j++) {
             index = (i - 1) * v + j - 1;
             if (adjMatrix[index].timeInTransit) {
+                int weight = adjMatrix[index].timeInTransit;
                 if (adjMatrix[index].isAir) {
-                    fprintf(fp, "%5d -- %5d [label=%5d, color=red]\n", i, j, adjMatrix[index].timeInTransit);
+                    fprintf(fp, "%5d -- %5d [label=%5d, weight=%5d, color=red]\n", i, j, weight, weight);
                 } else {
-                    fprintf(fp, "%5d -- %5d [label=%5d]\n", i, j, adjMatrix[index].timeInTransit);
+                    fprintf(fp, "%5d -- %5d [label=%5d, weight=%5d]\n", i, j, weight, weight);
                 }
             }
         }
