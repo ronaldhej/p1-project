@@ -29,12 +29,16 @@ input* readInput() {
     do {
 
         printf("Choose an option: ");
-        scanf("%c", &userInput->option);
+        scanf(" %c", &userInput->option);
 
     //ask for input until input option is valid
     } while (!handleOption(userInput));
 
     return userInput;
+}
+
+void handleInput(input *_input) {
+
 }
 
 #pragma region local functions
@@ -44,21 +48,50 @@ int handleOption(input* _input) {
     switch (_input->option) {
 
 //USER-----------
-        case 't':
+        case 't': {
             printf("Please enter your starting location: ");
-            scanf("%s", (char *) _input->startingLocation);
+            scanf(" %s", (char *) _input->startingLocation);
 
             printf("Please enter your final destination: ");
-            scanf("%s", (char *) _input->finalDestination);
+            scanf(" %s", (char *) _input->finalDestination);
 
             printf("Is %s -> %s your desired journey? (y/n):", _input->startingLocation,
                    _input->finalDestination); //TO-DO Not implemented
             break;
+        }
 
 //DEVELOPER------
-        case 'g':
-            printf("Generating graph..."); //TO-DO Not implemented
+        case 'g': {
+            int nVertices, nEdges, maxWgt, nAirports, maxAirPerHub;
+            char *outFile = "graph.gv";
+
+            printf("\n_____ Graph setup wizard:\n");
+
+            printf("[1/5] Number of vertices:  ");
+            scanf(" %d", &nVertices);
+
+            printf("[2/5] Number of edges:  ");
+            scanf(" %d", &nEdges);
+
+            printf("[3/5] Maximum value for weights: ");
+            scanf(" %d", &maxWgt);
+
+            printf("[4/5] Number of airport hubs: ");
+            scanf(" %d", &nAirports);
+
+            printf("[5/5] Maximum air routes per airport hub: ");
+            scanf(" %d", &maxAirPerHub);
+
+            printf("\nGenerating graph...");
+            randomConnectedGraph(
+                    nVertices,
+                    nEdges,
+                    maxWgt,
+                    nAirports,
+                    maxAirPerHub,
+                    outFile);
             break;
+        }
 
         default:
             //catch invalid input and return false
