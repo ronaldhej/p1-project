@@ -1,26 +1,18 @@
-
 #include "./graph/graph.h"
-#include "./utility/utility.h"
-
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 
+#define SEED 320
 
-// Replace with travel weight formula
-int weightEquation(int x) { return x; }
+int randomTimeInTransit() {
+    return (rand() % 300) + 60;
+}
 
 int main() {
 
-    struct edge adjMatrix[V][V];
+    //V is vertices, e is number of edges, out_file is name of file to save to
+    randomConnectedGraph(100, 120, 250, 3, 10,"graph.gv");
 
-    printUserManual();
-    input *userInput = readInput();
-    handleInput(userInput);
-    free(userInput);
-
-    //initGraph(adjMatrix);
-    //generateRandomEdges(adjMatrix, 1234, &weightEquation);
-    //printMatrix(adjMatrix);
-
-    return 0;
+  return 0;
 }

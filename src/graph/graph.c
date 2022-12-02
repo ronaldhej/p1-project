@@ -6,115 +6,244 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_EDGES 200
-#define MAX_WEIGHT 150
-
-struct edge {
-  int weight;
-  bool isAir;
-};
-
 // V is number of vertices
-int V = 10;
+int V = 1000;
 
-void initGraph(struct edge arr[][V]) {
-  int i, j;
-  for (i = 0; i < V; i++) {
-    for (j = 0; j < V; j++) {
-      arr[i][j].weight = 0;
-      arr[i][j].isAir = false;
-    }
-  }
-}
+typedef struct {
+    int timeInTransit;
+    bool isAir;
+} Edge;
 
-void addEdge(struct edge arr[][V], int src, int dest, int weight, bool isAir) {
-  arr[src][dest].weight = weight;
-  arr[dest][src].weight = weight;
-  arr[src][dest].isAir = isAir;
-  arr[dest][src].isAir = isAir;
-}
+typedef struct {
+    int ID;
+    char Title;
+} Vertex;
 
-struct edge generateRandomEdges(struct edge arr[][V], int seed,
-                                int (*equation)(int)) {
-  int numEdge;
-  srand(seed);
+typedef struct {
+    int timeTo;
+    int timeDep;
+    int timeIn;
+    int timeArr;
+    int timeFrom;
+} NodeWeight;
 
-  numEdge = 1 + rand() % MAX_EDGES;
+// Replace with travel timeInTransit formula
+int generateWeight(Edge edge) {
+    // NodeWeight node[nodeCount];
 
-  while (numEdge > V * (V - 1) / 2) {
-    numEdge = 1 + rand() % MAX_EDGES;
-  }
+    // node[nodeCount].timeTo = 0;
+    // node[nodeCount].timeDep = 0;
+    int timeIn = edge.timeInTransit;
+    // node[nodeCount].timeArr = 0;
+    // node[nodeCount].timeFrom = 0;
 
-  printf("Number of edges generated: %d\n", numEdge);
+    // bugs out every 4th iteration, resets i to 0
+    int weight = 0; // node[nodeCount].timeTo + node[nodeCount].timeDep +
+    // node[nodeCount].timeIn + node[nodeCount].timeArr +
+    // node[nodeCount].timeFrom;
 
-  for (int j = 0; j <= numEdge; j++) {
-    int a = rand() % V;
-    int b = rand() % V;
-
-    addEdge(arr, a, b, equation(1 + rand() % MAX_WEIGHT), false);
-  }
-}
-
-void printMatrix(struct edge arr[][V]) {
-  int i, j, k;
-
-  printf("  ");
-  for (k = 0; k < V; k++) {
-    printf("%d ", k);
-  }
-  printf("\n");
-  for (i = 0; i < V; i++) {
-    printf("%d ", i);
-    for (j = 0; j < V; j++) {
-      printf("%d ", arr[i][j].weight);
-    }
-    printf("\n");
-  }
+    return weight;
 }
 
 int minDistance(int dist[], bool sptSet[]) {
-  int min = INT_MAX, min_index;
+    int min = INT_MAX, min_index;
 
-  for (int v = 0; v < V; v++) {
-    if (sptSet[v] == false && dist[v] <= min) {
-      min = dist[v], min_index = v;
+    for (int v = 0; v < V; v++) {
+        if (sptSet[v] == false && dist[v] <= min) {
+            min = dist[v], min_index = v;
+        }
     }
-  }
 
-  return min_index;
+    return min_index;
 }
 
 void printSolution(int dist[]) {
-  printf("Vertex \t\t Distance from Source\n");
-  for (int i = 0; i < V; i++) {
-    printf("%d \t\t\t\t %d\n", i, dist[i]);
-  }
+    printf("Vertex \t\t Distance from Source\n");
+    for (int i = 0; i < V; i++) {
+        printf("%d \t\t\t\t %d\n", i, dist[i]);
+    }
 }
 
-void dijkstra(struct edge arr[][V], int src, int dest) {
-  int dist[V];
-  printf("src: %d dest: %d\n", src, dest);
+void dijkstra(Edge arr[][V], int src, int dest) {
+    int dist[V];
+    printf("src: %d dest: %d\n", src, dest);
 
-  bool sptSet[V];
+    bool sptSet[V];
 
-  for (int i = 0; i < V; i++) {
-    dist[i] = INT_MAX, sptSet[i] = false;
-  }
-
-  dist[src] = 0;
-
-  for (int count = 0; count < V - 1; count++) {
-    int u = minDistance(dist, sptSet);
-    sptSet[u] = true;
-    if (u == dest) {
-      break;
+    for (int i = 0; i < V; i++) {
+        dist[i] = INT_MAX, sptSet[i] = false;
     }
-    for (int v = 0; v < V; v++) {
-      if (!sptSet[v] && arr[u][v].weight && dist[u] != INT_MAX &&
-          dist[u] + arr[u][v].weight < dist[v]) {
-        dist[v] = dist[u] + arr[u][v].weight;
-      }
+
+    dist[src] = 0;
+
+    for (int count = 0; count < V - 1; count++) {
+        int u = minDistance(dist, sptSet);
+        sptSet[u] = true;
+        if (u == dest) {
+            break;
+        }
+        for (int v = 0; v < V; v++) {
+            if (!sptSet[v] && arr[u][v].timeInTransit && dist[u] != INT_MAX &&
+                dist[u] + arr[u][v].timeInTransit < dist[v]) {
+                dist[v] = dist[u] + arr[u][v].timeInTransit;
+            }
+        }
     }
-  }
-  printSolution(dist);
+    printSolution(dist);
+}
+
+//  Full disclosure, this code is from  Richard Johnsonbaugh and Martin Kalin from the
+//  Department of Computer Science and Information Systems, they have a great way of generating
+//  connected graphs
+
+void initArray(int *a, int end) {
+    int i;
+
+    for (i = 0; i < end; i++)
+        *a++ = i;
+}
+
+/* Return a random integer between 0 and k-1 inclusive. */
+int ran(int k) {
+    return rand() % k;
+}
+
+void swap(int *a, int *b) {
+    int temp;
+
+    temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void permute(int *a, int n) {
+    int i;
+
+    for (i = 0; i < n - 1; i++)
+        swap(a + i + ran(n - i), a + i);
+}
+
+void printGraph(int v,
+                int e,
+                char *out_file,
+                Edge *adjMatrix) {
+    int i, j, index;
+    FILE *fp;
+
+    if ((fp = fopen(out_file, "w")) == NULL) {
+        printf("Unable to open file %s for writing.\n", out_file);
+        return;
+    }
+    printf("\n\tWriting graph to file %s.\n", out_file);
+
+    fprintf(fp, "graph G {\n");
+    fprintf(fp, "\tlayout=fdp\n\tsplines=true\n\tK=2\n\tnode [shape=circle]\n");
+    for (i = 1; i < v; i++)
+        for (j = i + 1; j <= v; j++) {
+            index = (i - 1) * v + j - 1;
+            if (adjMatrix[index].timeInTransit) {
+                int weight = adjMatrix[index].timeInTransit;
+                if (adjMatrix[index].isAir) {
+                    fprintf(fp, "%5d -- %5d [label=%5d, weight=%5d, color=red]\n", i, j, weight, weight);
+                } else {
+                    fprintf(fp, "%5d -- %5d [label=%5d, weight=%5d]\n", i, j, weight, weight);
+                }
+            }
+        }
+    fprintf(fp, "}");
+    fclose(fp);
+    printf("\tGraph is written to file %s.\n", out_file);
+}
+
+
+//connected graph
+void randomConnectedGraph(int v,
+                            int e,
+                            int maxWgt,
+                            int airportNum,
+                            int maxAirRoutesPerHub,
+                            char *outFile) {
+    int i, j, count, index, *tree;
+    Edge *adjMatrix;
+
+    if ((adjMatrix = (Edge *) calloc(v * v, sizeof(Edge)))
+        == NULL) {
+        printf("Not enough room for this size graph\n");
+        return;
+    }
+
+    if ((tree = (int *) calloc(v, sizeof(int))) == NULL) {
+        printf("Not enough room for this size graph\n");
+        free(adjMatrix);
+        return;
+    }
+
+    printf("\n\tBeginning construction of graph.\n");
+
+    /*  Generate a random permutation in the array tree. */
+    initArray(tree, v);
+    permute(tree, v);
+
+    /*  Next generate a random spanning tree.
+        The algorithm is:
+
+          Assume that vertices tree[ 0 ],...,tree[ i - 1 ] are in
+          the tree.  Add an edge incident on tree[ i ]
+          and a random vertex in the set {tree[ 0 ],...,tree[ i - 1 ]}.
+     */
+
+    for (i = 1; i < v; i++) {
+        j = ran(i);
+        adjMatrix[tree[i] * v + tree[j]].timeInTransit =
+        adjMatrix[tree[j] * v + tree[i]].timeInTransit = 1 + ran(maxWgt);
+    }
+
+    /* Add additional random edges until achieving at least desired number */
+    for (count = v - 1; count < e;) {
+        i = ran(v);
+        j = ran(v);
+
+        if (i == j)
+            continue;
+
+        if (i > j)
+            swap(&i, &j);
+
+        index = i * v + j;
+        if (!adjMatrix[index].timeInTransit) {
+            adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
+            count++;
+        }
+    }
+
+    //Airport hub adding loop
+    for(count = 0; count < airportNum;) {
+        int numRoutes = ran(maxAirRoutesPerHub);
+        i = ran(v);
+
+        // Loop to add multiple routes from same airport hub
+        for (int currRoutes = 0; currRoutes < numRoutes;) {
+            j = ran(v);
+
+            if (i == j)
+                continue;
+
+            if (i > j)
+                swap(&i, &j);
+            index = i * v + j;
+            if(!adjMatrix[index].timeInTransit && !adjMatrix[index].isAir) {
+                adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
+                adjMatrix[index].isAir = true;
+                currRoutes++;
+            }
+        }
+
+        count++;
+
+    }
+
+    printGraph(v, count, outFile, adjMatrix);
+
+    free(tree);
+    free(adjMatrix);
 }
