@@ -15,8 +15,7 @@ struct edge {
 };
 
 void dijkstra(struct edge adjList[][V], int src, int dest, bool airAllowed) {
-    int dist[V], pred[V];
-    struct edge cost[V][V];
+    int dist[V], pred[V], cost[V][V];
     int count, mindistance, next, i, j;
     bool visited[V];
 
@@ -24,20 +23,29 @@ void dijkstra(struct edge adjList[][V], int src, int dest, bool airAllowed) {
         for (j = 0; j < V; j++) {
 
             if (adjList[i][j].weight == 0) {
-                cost[i][j].weight = INFINITY;
-                cost[i][j].isAir = adjList[i][j].isAir;
+                cost[i][j] = INFINITY;
 
-            } else {
-                cost[i][j].weight = adjList[i][j].weight;
-                cost[i][j].isAir = adjList[i][j].isAir;
+            }
+            else {
+                if(airAllowed == true){
+                    cost[i][j] = adjList[i][j].weight;
+                }
+                else if(airAllowed == false){
+                    if(adjList[i][j].isAir == true){
+                        cost[i][j] = INFINITY;
+                    }
+                    else if(adjList[i][j].isAir == false){
+                        cost[i][j] = adjList[i][j].weight;
+                    }
+                }
             }
         }
     }
 
-    printf("src: %d dest: %d\n", src, dest);
+    printf("\nsrc: %d dest: %d", src, dest);
 
     for (i = 0; i < V; i++) {
-        dist[i] = cost[src][i].weight;
+        dist[i] = cost[src][i];
         pred[i] = src;
         visited[i] = false;
     }
@@ -58,8 +66,8 @@ void dijkstra(struct edge adjList[][V], int src, int dest, bool airAllowed) {
         visited[next] = true;
         for (i = 0; i < V; i++)
             if (visited[i] == false)
-                if (mindistance + cost[next][i].weight < dist[i]) {
-                    dist[i] = mindistance + cost[next][i].weight;
+                if (mindistance + cost[next][i] < dist[i]) {
+                    dist[i] = mindistance + cost[next][i];
                     pred[i] = next;
                 }
         count++;
@@ -69,9 +77,9 @@ void dijkstra(struct edge adjList[][V], int src, int dest, bool airAllowed) {
 }
 
 void printSolution(int dist[], int pred[], int src) {
-    printf("Vertex \t\t Distance from Source\n");
+    printf("\nVertex \t\t Distance from Source");
     for (int i = 0; i < V; i++) {
-        printf("%d \t\t\t\t %d\n", i, dist[i]);
+        printf("\n%d \t\t\t\t %d", i, dist[i]);
     }
 
     for (int i = 0; i < V; i++) {

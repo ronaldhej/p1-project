@@ -20,5 +20,6 @@ int main() {
   printMatrix(adjMatrix);
 
   dijkstra(adjMatrix, 1, 4, false);
+  dijkstra(adjMatrix, 1, 4, true);
   return 0;
 }
