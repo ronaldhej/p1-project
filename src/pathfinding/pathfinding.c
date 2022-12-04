@@ -1,50 +1,86 @@
 //
 // Created by sande on 11/24/2022.
 //
+#include<stdio.h>
+#include<stdbool.h>
 
-int minDistance(int dist[], bool sptSet[]) {
-    int min = INT_MAX, min_index;
+#define V 10
+#define INT_MAX 200
+#define INFINITY 9999
 
-    for (int v = 0; v < V; v++) {
-        if (sptSet[v] == false && dist[v] <= min) {
-            min = dist[v], min_index = v;
+struct edge {
+    int weight;
+    bool isAir;
+};
+
+void printSolution(int dist[], int pred[], int src);
+
+void dijkstra(struct edge adjList[][V], int src, int dest) {
+    int dist[V], pred[V];
+    struct edge cost[V][V];
+    int count, mindistance, next, i, j;
+    bool visited[V];
+
+    for (i = 0; i < V; i++) {
+        for (j = 0; j < V; j++) {
+
+            if (adjList[i][j].weight == 0) {
+                cost[i][j].weight = INFINITY;
+                cost[i][j].isAir = adjList[i][j].isAir;
+
+            } else {
+                cost[i][j].weight = adjList[i][j].weight;
+                cost[i][j].isAir = adjList[i][j].isAir;
+            }
         }
     }
 
-    return min_index;
+    printf("src: %d dest: %d\n", src, dest);
+
+    for (i = 0; i < V; i++) {
+        dist[i] = cost[src][i].weight;
+        pred[i] = src;
+        visited[i] = false;
+    }
+
+    dist[src] = 0;
+    visited[src] = true;
+    count = 1;
+
+    while (count < V - 1) {
+        mindistance = INFINITY;
+
+        for (i = 0; i < V; i++)
+            if (dist[i] < mindistance && visited[i] == false) {
+                mindistance = dist[i];
+                next = i;
+            }
+
+        visited[next] = true;
+        for (i = 0; i < V; i++)
+            if (visited[i] == false)
+                if (mindistance + cost[next][i].weight < dist[i]) {
+                    dist[i] = mindistance + cost[next][i].weight;
+                    pred[i] = next;
+                }
+        count++;
+    }
+
+    printSolution(dist, pred, src);
 }
 
-void printSolution(int dist[]) {
+void printSolution(int dist[], int pred[], int src) {
     printf("Vertex \t\t Distance from Source\n");
     for (int i = 0; i < V; i++) {
         printf("%d \t\t\t\t %d\n", i, dist[i]);
     }
-}
-
-void dijkstra(struct edge arr[][V], int src, int dest) {
-    int dist[V];
-    printf("src: %d dest: %d\n", src, dest);
-
-    bool sptSet[V];
 
     for (int i = 0; i < V; i++) {
-        dist[i] = INT_MAX, sptSet[i] = false;
+        printf("\nPath to node %d = %d", i, i);
+        int j = i;
+        do {
+            j = pred[j];
+            printf("<-%d", j);
+        } while (j != src);
     }
-
-    dist[src] = 0;
-
-    for (int count = 0; count < V - 1; count++) {
-        int u = minDistance(dist, sptSet);
-        sptSet[u] = true;
-        if (u == dest) {
-            break;
-        }
-        for (int v = 0; v < V; v++) {
-            if (!sptSet[v] && arr[u][v].weight && dist[u] != INT_MAX &&
-                dist[u] + arr[u][v].weight < dist[v]) {
-                dist[v] = dist[u] + arr[u][v].weight;
-            }
-        }
-    }
-    printSolution(dist);
 }

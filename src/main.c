@@ -15,7 +15,7 @@ int main() {
   printStartingText();
 
   initGraph(adjMatrix);
-  generateRandomEdges(adjMatrix, 1234, &weightEquation);
+  generateRandomEdges(adjMatrix, 1, &weightEquation);
 
   printMatrix(adjMatrix);
 
