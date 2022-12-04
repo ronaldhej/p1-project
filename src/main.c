@@ -19,6 +19,6 @@ int main() {
 
   printMatrix(adjMatrix);
 
-  dijkstra(adjMatrix, 1, 4);
+  dijkstra(adjMatrix, 1, 4, false);
   return 0;
 }

@@ -5,8 +5,7 @@
 #ifndef P_1_PATHFINDING_H
 #define P_1_PATHFINDING_H
 
-void dijkstra(struct edge arr[][V], int src, int dest);
-void printSolution(int dist[]);
-int minDistance(int dist[], bool visited[]);
+void dijkstra(struct edge arr[][V], int src, int dest, bool airAllowed);
+void printSolution(int dist[], int pred[], int src);
 
 #endif //P_1_PATHFINDING_H

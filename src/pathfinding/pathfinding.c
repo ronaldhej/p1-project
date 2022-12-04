@@ -5,17 +5,16 @@
 #include<stdbool.h>
 
 #define V 10
-#define INT_MAX 200
 #define INFINITY 9999
+
+void printSolution(int dist[], int pred[], int src);
 
 struct edge {
     int weight;
     bool isAir;
 };
 
-void printSolution(int dist[], int pred[], int src);
-
-void dijkstra(struct edge adjList[][V], int src, int dest) {
+void dijkstra(struct edge adjList[][V], int src, int dest, bool airAllowed) {
     int dist[V], pred[V];
     struct edge cost[V][V];
     int count, mindistance, next, i, j;
