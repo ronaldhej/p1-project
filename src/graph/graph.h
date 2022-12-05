@@ -10,15 +10,18 @@
 
 extern int V;
 
-struct edge {
-    int weight;
+typedef struct {
+    int timeInTransit;
     bool isAir;
-};
+} Edge;
 
+void dijkstra(Edge arr[][V], int src, int dest);
 
-void initGraph(struct edge arr[][V]);
-void addEdge(struct edge arr[][V], int src, int dest, int weight, bool isAir);
-struct edge generateRandomEdges(struct edge arr[][V], int seed, int (*equation)(int));
-void printMatrix(struct edge arr[][V]);
+void randomConnectedGraph(int numNodes,
+                          int numEdges,
+                          int maxWgt,
+                          int airportNum,
+                          int maxAirRoutesPerHub,
+                          char *outFile);
 
 #endif //P_1_GRAPH_H
