@@ -8,4 +8,7 @@ add_executable(
         src/graph/graph.c
         src/graph/graph.h
         src/utility/utility.c
-        src/utility/utility.h)
+        src/utility/utility.h
+        src/pathfinding/pathfinding.c
+        src/pathfinding/pathfinding.h
+)
