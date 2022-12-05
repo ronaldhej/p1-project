@@ -18,8 +18,8 @@ typedef struct {
 
 void dijkstra(Edge arr[][V], int src, int dest);
 
-void randomConnectedGraph(int v,
-                          int e,
+void randomConnectedGraph(int numNodes,
+                          int numEdges,
                           int maxWgt,
                           int airportNum,
                           int maxAirRoutesPerHub,
