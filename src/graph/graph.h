@@ -15,7 +15,6 @@ typedef struct {
     bool isAir;
 } Edge;
 
-
 void dijkstra(Edge arr[][V], int src, int dest);
 
 void randomConnectedGraph(int numNodes,
