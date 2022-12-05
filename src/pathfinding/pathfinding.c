@@ -9,12 +9,12 @@
 
 void printSolution(int dist[], int pred[], int src);
 
-struct edge {
+typedef struct {
     int weight;
     bool isAir;
-};
+} Edge;
 
-void dijkstra(struct edge adjList[][V], int src, int dest, bool airAllowed) {
+void dijkstra(Edge adjMatrix[][V], int src, int dest, bool airAllowed) {
     int dist[V], pred[V], cost[V][V];
     int count, mindistance, next, i, j;
     bool visited[V];
@@ -22,20 +22,20 @@ void dijkstra(struct edge adjList[][V], int src, int dest, bool airAllowed) {
     for (i = 0; i < V; i++) {
         for (j = 0; j < V; j++) {
 
-            if (adjList[i][j].weight == 0) {
+            if (adjMatrix[i][j].weight == 0) {
                 cost[i][j] = INFINITY;
 
             }
             else {
                 if(airAllowed == true){
-                    cost[i][j] = adjList[i][j].weight;
+                    cost[i][j] = adjMatrix[i][j].weight;
                 }
                 else if(airAllowed == false){
-                    if(adjList[i][j].isAir == true){
+                    if(adjMatrix[i][j].isAir == true){
                         cost[i][j] = INFINITY;
                     }
-                    else if(adjList[i][j].isAir == false){
-                        cost[i][j] = adjList[i][j].weight;
+                    else if(adjMatrix[i][j].isAir == false){
+                        cost[i][j] = adjMatrix[i][j].weight;
                     }
                 }
             }

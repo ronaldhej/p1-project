@@ -57,41 +57,6 @@ int minDistance(int dist[], bool sptSet[]) {
     return min_index;
 }
 
-void printSolution(int dist[]) {
-    printf("Vertex \t\t Distance from Source\n");
-    for (int i = 0; i < V; i++) {
-        printf("%d \t\t\t\t %d\n", i, dist[i]);
-    }
-}
-
-void dijkstra(Edge arr[][V], int src, int dest) {
-    int dist[V];
-    printf("src: %d dest: %d\n", src, dest);
-
-    bool sptSet[V];
-
-    for (int i = 0; i < V; i++) {
-        dist[i] = INT_MAX, sptSet[i] = false;
-    }
-
-    dist[src] = 0;
-
-    for (int count = 0; count < V - 1; count++) {
-        int u = minDistance(dist, sptSet);
-        sptSet[u] = true;
-        if (u == dest) {
-            break;
-        }
-        for (int v = 0; v < V; v++) {
-            if (!sptSet[v] && arr[u][v].timeInTransit && dist[u] != INT_MAX &&
-                dist[u] + arr[u][v].timeInTransit < dist[v]) {
-                dist[v] = dist[u] + arr[u][v].timeInTransit;
-            }
-        }
-    }
-    printSolution(dist);
-}
-
 //  Full disclosure, this code is from  Richard Johnsonbaugh and Martin Kalin from the
 //  Department of Computer Science and Information Systems, they have a great way of generating
 //  connected graphs

@@ -5,7 +5,7 @@
 #ifndef P_1_PATHFINDING_H
 #define P_1_PATHFINDING_H
 
-void dijkstra(struct edge arr[][V], int src, int dest, bool airAllowed);
+void dijkstra(Edge adjMatrix[][V], int src, int dest, bool airAllowed);
 void printSolution(int dist[], int pred[], int src);
 
 #endif //P_1_PATHFINDING_H

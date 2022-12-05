@@ -14,7 +14,7 @@ int handleOption(input* _input);
 
 //prints the initial text, informing the user of how to interact with the program
 void printUserManual() {
-    printf("--- Program options ---"
+    printf("--- Program options ---\n"
            "User options:\n"
            "t:    Calculate travel time\n"
            "Developer options:\n"
