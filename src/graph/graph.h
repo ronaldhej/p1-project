@@ -17,6 +17,7 @@ typedef struct {
 
 void dijkstra(Edge arr[][V], int src, int dest);
 
+
 void randomConnectedGraph(int numNodes,
                           int numEdges,
                           int maxWgt,

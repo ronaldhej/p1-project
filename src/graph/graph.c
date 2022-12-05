@@ -157,6 +157,7 @@ void printGraph(int v,
 
 
 //connected graph
+
 void randomConnectedGraph(int numNodes,
                             int numEdges,
                             int maxWgt,
@@ -166,11 +167,13 @@ void randomConnectedGraph(int numNodes,
     int i, j, count, index, *tree;
     Edge *adjMatrix;
 
+
     if ((adjMatrix = (Edge *) calloc(numNodes * numNodes, sizeof(Edge)))
         == NULL) {
         printf("Not enough room for this size graph\n");
         return;
     }
+
 
     if ((tree = (int *) calloc(numNodes, sizeof(int))) == NULL) {
         printf("Not enough room for this size graph\n");
@@ -219,6 +222,7 @@ void randomConnectedGraph(int numNodes,
     //Airport hub adding loop
     for(count = 0; count < airportNum;) {
         int numRoutes = ran(maxAirRoutesPerHub);
+
         i = ran(numNodes);
 
         // Loop to add multiple routes from same airport hub
@@ -230,7 +234,9 @@ void randomConnectedGraph(int numNodes,
 
             if (i > j)
                 swap(&i, &j);
+
             index = i * numNodes + j;
+
             if(!adjMatrix[index].timeInTransit && !adjMatrix[index].isAir) {
                 adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
                 adjMatrix[index].isAir = true;
