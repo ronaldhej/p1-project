@@ -9,11 +9,19 @@ typedef struct {
     char option;
     char startingLocation[8];
     char finalDestination[8];
-} input;
+} Input;
+
+typedef struct {
+    int numVertices;
+    int numEdges;
+    int maxWeight;
+    int maxHubs;
+    int maxAirRoutes;
+} GraphValues;
 
 void printUserManual();
-input* readInput();
-void handleOption(input *_input, Edge *adjMatrix);
+Input* readInput();
+void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int *numVertices);
 
 
 #endif //P_1_UTILITY_H

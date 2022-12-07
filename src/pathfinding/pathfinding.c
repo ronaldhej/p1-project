@@ -13,6 +13,21 @@
 
 void printSolution(int dist[], int pred[], int src, int v);
 
+void printMatrix(int matrix[], int length) {
+    for (int i = 0; i < length*length; i++) {
+        if (matrix[i] == INFINITY) {
+            printf("_");
+        } else {
+            printf("%d", matrix[i]);
+        }
+
+        if ((i+1) % length == 0 && i > 0)
+            printf("\n");
+        else
+            printf("\t");
+    }
+}
+
 //return unvisited vertex with shortest distance to source
 int shortestUnvisitedVertex(int const dist[], bool const visited[], int numVertex) {
     int min = INFINITY;
@@ -39,6 +54,16 @@ bool fullyVisited(bool visited[], int numVertices) {
 
 void ensureMatrixSymmetry(int matrix[], int numVertices) {
     return;
+}
+
+void examineVertex(int vertIndex, int currentVert, int vert, int cost[], int dist[], int pred[], bool visited[]) {
+    if (cost[vertIndex] < INFINITY && !visited[vertIndex]) {
+        int newDist = dist[currentVert] + cost[vertIndex];
+        if (newDist < dist[vert]) {
+            dist[vert] = newDist;
+            pred[vert] = currentVert;
+        }
+    }
 }
 
 void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
@@ -82,18 +107,7 @@ void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     printf("\n");
 
     //print cost matrix
-    for (i = 0; i < v*v; i++) {
-        if (cost[i] == INFINITY) {
-            printf("_");
-        } else {
-            printf("%d", cost[i]);
-        }
-
-        if ((i+1) % v == 0 && i > 0)
-            printf("\n");
-        else
-            printf("\t");
-    }
+    //printMatrix(cost, v);
 
     printf("\nsrc: %d dest: %d\n", src, dest);
     //decrement src & dest
@@ -115,18 +129,12 @@ void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     //visit vertices
     int currentVert = src;
     while(1) {
-        if (count >= 1000000) break;
+        if (count >= 10000000) break; //FAILSAFE
 
         //examine adjacent vertices
         for (int vert = 0; vert <= v; vert++) {
             int vertIndex = indexFromCoords(currentVert, vert, v);
-            if (cost[vertIndex] < INFINITY && !visited[vertIndex]) {
-                int newDist = dist[currentVert] + cost[vertIndex];
-                if (newDist < dist[vert]) {
-                    dist[vert] = newDist;
-                    pred[vert] = currentVert;
-                }
-            }
+            examineVertex(vertIndex, currentVert, vert, cost, dist, pred, visited);
         }
 
         //visit next vertex unless fully visited
@@ -137,15 +145,18 @@ void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     }
     printf("\ncount:%d\n", count);
 
+    /*
     for (i = 0; i < v; i++) {
-        printf("vert[%d] distance : %d\n",(i+1),dist[i]);
+        printf("vert[%d] distance :\t%d\n",(i+1),dist[i]);
     }
     printf("\n");
     for (i = 0; i < v; i++) {
-        printf("predecessor to vert[%d] : %d\n",(i+1),pred[i]+1);
+        printf("predecessor to vert[%d] :\t%d\n",(i+1),pred[i]+1);
     }
+     */
 
     //solution
+    printf("%s", (airAllowed) ? "AIR " : "RAIL " );
     printf("SOLUTION : \n");
     printf("%d", dest+1);
     int vertex = pred[dest];

@@ -8,11 +8,19 @@ typedef struct {
     char option;
     int startingLocation;
     int finalDestination;
-} input;
+} Input;
+
+typedef struct {
+    int numVertices;
+    int numEdges;
+    int maxWeight;
+    int maxHubs;
+    int maxAirRoutes;
+} GraphValues;
 
 //prints the initial text, informing the user of how to interact with the program
 void printUserManual() {
-    printf("--- Program options ---\n"
+    printf("\n--- Program options ---\n"
            "User options:\n"
            "t:    Calculate travel time\n"
            "q:    Exit program\n"
@@ -21,14 +29,14 @@ void printUserManual() {
            );
 }
 
-//reads input from the user, returns input
-input* readInput() {
-    input *userInput = malloc(sizeof(input));
+//reads Input from the user, returns Input
+Input* readInput() {
+    Input *userInput = malloc(sizeof(Input));
 
     printf("Choose an option:");
     scanf(" %c", &userInput->option);
 
-    //ask for input until input option is valid
+    //ask for Input until Input option is valid
 
     return userInput;
 }
@@ -36,8 +44,7 @@ input* readInput() {
 #pragma region local functions
 
 //different behavior determined by option
-void handleOption(input* _input, Edge adjMatrix[]) {
-    int nVertices;
+void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int *numVertices) {
     switch (_input->option) {
 
 //USER-----------
@@ -62,13 +69,24 @@ void handleOption(input* _input, Edge adjMatrix[]) {
                     if(confirm != 'y' && confirm != 'n') printf("Please enter y for yes or n for no:\n");
                 } while(confirm != 'y' && confirm != 'n');
             } while(confirm == 'n');
+
+
+            printf("\n%d->", _input->startingLocation);
+            printf("%d\n",_input->finalDestination);
+
+            if (numVertices == NULL) {
+                printf("nVertices is undeclared!\n");
+                break;
+            }
+
             dijkstra(adjMatrix,
-                     nVertices,
+                     *numVertices,
                      _input->startingLocation,
                      _input->finalDestination,
                      false);
+
             dijkstra(adjMatrix,
-                     nVertices,
+                     *numVertices,
                      _input->startingLocation,
                      _input->finalDestination,
                      true);
@@ -82,12 +100,11 @@ void handleOption(input* _input, Edge adjMatrix[]) {
 //DEVELOPER------
         case 'g': {
             int nEdges, maxWgt, nAirports, maxAirPerHub;
-            char *outFile = "graph.gv";
 
             printf("\n_____ Graph setup wizard:\n");
 
             printf("[1/5] Number of vertices:  ");
-            scanf(" %d", &nVertices);
+            scanf(" %d", numVertices);
 
             printf("[2/5] Number of edges:  ");
             scanf(" %d", &nEdges);
@@ -102,20 +119,18 @@ void handleOption(input* _input, Edge adjMatrix[]) {
             scanf(" %d", &maxAirPerHub);
 
             printf("\nGenerating graph...");
-            randomConnectedGraph(
-                    nVertices,
-                    nEdges,
-                    maxWgt,
-                    nAirports,
-                    maxAirPerHub,
-                    adjMatrix,
-                    outFile);
+            graphValues->numVertices = *numVertices;
+            graphValues->numEdges = nEdges;
+            graphValues->maxWeight = maxWgt;
+            graphValues->maxHubs = nAirports;
+            graphValues->maxAirRoutes = maxAirPerHub;
+
             break;
         }
 
         default:
-            //catch invalid input and return false
-            printf("Not a valid input\n");
+            //catch invalid Input and return false
+            printf("Not a valid Input\n");
             break;
     }
 }

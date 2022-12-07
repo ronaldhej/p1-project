@@ -12,28 +12,48 @@ int randomTimeInTransit() {
 }
 
 int main() {
+    setbuf(stdout, 0);
     int numVertices = 100;
 
-    input *userInput;
-    Edge *adjMatrix = initializeAdjMatrix(numVertices);
+    Input *userInput;
+    GraphValues *graphValues = malloc(sizeof(GraphValues));
+    Edge *adjMatrix;
+    char *outFile = "graph.gv";
+
+    graphValues->numVertices = 0;
+    graphValues->numEdges = 0;
+    graphValues->maxWeight = 0;
+    graphValues->maxHubs = 0;
+    graphValues->maxAirRoutes = 0;
 
     //randomConnectedGraph(10,12,240,3,3, adjMatrix,"graph.gv");
     //randomConnectedGraph(6,8,240,2,2, adjMatrix,"graph.gv");
-    randomConnectedGraph(numVertices,120,240,4,12, adjMatrix,"graph.gv");
+    //randomConnectedGraph(numVertices,120,240,4,12, adjMatrix,"graph.gv");
 
-    dijkstra(adjMatrix, numVertices,1,2,true);
-
-
-    free(userInput);
-    free(adjMatrix);
-    return 0;
+    //dijkstra(adjMatrix, numVertices,1,2,true);
 
     do {
+        if (graphValues->numVertices != 0) {
+            adjMatrix = initializeAdjMatrix(numVertices);
+
+            randomConnectedGraph(
+                    numVertices,
+                    graphValues->numEdges,
+                    graphValues->maxWeight,
+                    graphValues->maxHubs,
+                    graphValues->maxAirRoutes,
+                    adjMatrix,
+                    outFile);
+        }
+
         printUserManual();
         userInput = readInput();
-        handleOption(userInput, adjMatrix);
+        handleOption(userInput, graphValues, adjMatrix, &numVertices);
 
     } while(userInput->option != 'q');
 
-  return 0;
+    free(graphValues);
+    free(userInput);
+    free(adjMatrix);
+    return 0;
 }

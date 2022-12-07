@@ -170,12 +170,14 @@ void randomConnectedGraph(int numNodes,
           and a random vertex in the set {tree[ 0 ],...,tree[ i - 1 ]}.
      */
 
+    printf("\n\tBuilding 1D array.\n");
     for (i = 1; i < numNodes; i++) {
         j = ran(i);
         adjMatrix[tree[i] * numNodes + tree[j]].timeInTransit =
         adjMatrix[tree[j] * numNodes + tree[i]].timeInTransit = 1 + ran(maxWgt);
     }
 
+    printf("\n\tAdding additional random edges.\n");
     /* Add additional random edges until achieving at least desired number */
     for (count = numNodes - 1; count < numEdges;) {
         i = ran(numNodes);
@@ -194,6 +196,7 @@ void randomConnectedGraph(int numNodes,
         }
     }
 
+    printf("\n\tAdding airport hubs.\n");
     //Airport hub adding loop
     for(count = 0; count < airportNum;) {
         int numRoutes = ran(maxAirRoutesPerHub);
