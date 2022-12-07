@@ -13,10 +13,16 @@ int randomTimeInTransit() {
 
 int main() {
 
-    printUserManual();
-    input *userInput = readInput();
-    handleInput(userInput);
+    input *userInput;
+    Edge *adjMatrix;
+    do {
+        printUserManual();
+        userInput = readInput();
+        handleOption(userInput, adjMatrix);
+
+    } while(userInput->option != 'q');
     free(userInput);
+    free(adjMatrix);
 
   return 0;
 }

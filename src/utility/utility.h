@@ -13,7 +13,7 @@ typedef struct {
 
 void printUserManual();
 input* readInput();
-void handleInput(input *_input);
+void handleOption(input *_input, Edge *adjMatrix);
 
 
 #endif //P_1_UTILITY_H

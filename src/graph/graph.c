@@ -6,13 +6,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../pathfinding/pathfinding.h"
+
 // V is number of vertices
 int V = 1000;
-
-typedef struct {
-    int timeInTransit;
-    bool isAir;
-} Edge;
 
 typedef struct {
     int ID;
@@ -118,6 +115,22 @@ void printGraph(int v,
     fprintf(fp, "}");
     fclose(fp);
     printf("\tGraph is written to file %s.\n", out_file);
+
+    printf("graph G {\n");
+    printf("\tlayout=fdp\n\tsplines=true\n\tK=2\n\tnode [shape=circle]\n");
+    for (i = 1; i < v; i++)
+        for (j = i + 1; j <= v; j++) {
+            index = (i - 1) * v + j - 1;
+            if (adjMatrix[index].timeInTransit) {
+                int weight = adjMatrix[index].timeInTransit;
+                if (adjMatrix[index].isAir) {
+                    printf("%5d -- %5d [label=%5d, weight=%5d, color=red]\n", i, j, weight, weight);
+                } else {
+                    printf("%5d -- %5d [label=%5d, weight=%5d]\n", i, j, weight, weight);
+                }
+            }
+        }
+    printf("}");
 }
 
 
@@ -128,9 +141,9 @@ void randomConnectedGraph(int numNodes,
                             int maxWgt,
                             int airportNum,
                             int maxAirRoutesPerHub,
+                            Edge *adjMatrix,
                             char *outFile) {
     int i, j, count, index, *tree;
-    Edge *adjMatrix;
 
 
     if ((adjMatrix = (Edge *) calloc(numNodes * numNodes, sizeof(Edge)))
@@ -213,8 +226,15 @@ void randomConnectedGraph(int numNodes,
 
     }
 
+    printf("Printed Graph \n");
     printGraph(numNodes, count, outFile, adjMatrix);
 
+    printf("Printed pathfinding \n");
+    dijkstra(adjMatrix,
+             numNodes,
+             1,
+             2,
+             false);
+
     free(tree);
-    free(adjMatrix);
 }

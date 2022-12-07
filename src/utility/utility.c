@@ -2,21 +2,20 @@
 #include <malloc.h>
 
 #include "../graph/graph.h"
+#include "../pathfinding/pathfinding.h"
 
 typedef struct {
     char option;
-    char startingLocation[64];
-    char finalDestination[64];
+    int startingLocation;
+    int finalDestination;
 } input;
-
-//local prototypes, only used in utility
-int handleOption(input* _input);
 
 //prints the initial text, informing the user of how to interact with the program
 void printUserManual() {
     printf("--- Program options ---\n"
            "User options:\n"
            "t:    Calculate travel time\n"
+           "q:    Exit program\n"
            "Developer options:\n"
            "g:    Generate a graph using specified seed\n\n"
            );
@@ -26,43 +25,63 @@ void printUserManual() {
 input* readInput() {
     input *userInput = malloc(sizeof(input));
 
-    do {
-
-        printf("Choose an option: ");
-        scanf(" %c", &userInput->option);
+    printf("Choose an option:");
+    scanf(" %c", &userInput->option);
 
     //ask for input until input option is valid
-    } while (!handleOption(userInput));
 
     return userInput;
-}
-
-void handleInput(input *_input) {
-
 }
 
 #pragma region local functions
 
 //different behavior determined by option
-int handleOption(input* _input) {
+void handleOption(input* _input, Edge* adjMatrix) {
+    int nVertices;
     switch (_input->option) {
 
 //USER-----------
         case 't': {
-            printf("Please enter your starting location: ");
-            scanf(" %s", (char *) _input->startingLocation);
+            char confirm = 'x';
+            if (!adjMatrix) {
+                printf("Please generate graph first \n");
+                break;
+            }
+            do {
+                printf("Please enter your starting location: \n");
+                scanf(" %d", &_input->startingLocation);
 
-            printf("Please enter your final destination: ");
-            scanf(" %s", (char *) _input->finalDestination);
+                printf("Please enter your final destination: \n");
+                scanf(" %d",  &_input->finalDestination);
 
-            printf("Is %s -> %s your desired journey? (y/n):", _input->startingLocation,
-                   _input->finalDestination); //TO-DO Not implemented
+                printf("Is %d -> %d your desired journey? (y/n):\n", _input->startingLocation,
+                       _input->finalDestination);
+
+                do {
+                    scanf(" %c", &confirm);
+                    if(confirm != 'y' && confirm != 'n') printf("Please enter y for yes or n for no:\n");
+                } while(confirm != 'y' && confirm != 'n');
+            } while(confirm == 'n');
+            dijkstra(adjMatrix,
+                     nVertices,
+                     _input->startingLocation,
+                     _input->finalDestination,
+                     false);
+            dijkstra(adjMatrix,
+                     nVertices,
+                     _input->startingLocation,
+                     _input->finalDestination,
+                     true);
+            break;
+        }
+
+        case 'q': {
             break;
         }
 
 //DEVELOPER------
         case 'g': {
-            int nVertices, nEdges, maxWgt, nAirports, maxAirPerHub;
+            int nEdges, maxWgt, nAirports, maxAirPerHub;
             char *outFile = "graph.gv";
 
             printf("\n_____ Graph setup wizard:\n");
@@ -89,6 +108,7 @@ int handleOption(input* _input) {
                     maxWgt,
                     nAirports,
                     maxAirPerHub,
+                    adjMatrix,
                     outFile);
             break;
         }
@@ -96,9 +116,8 @@ int handleOption(input* _input) {
         default:
             //catch invalid input and return false
             printf("Not a valid input\n");
-            return 0;
+            break;
     }
-    return 1;
 }
 
 #pragma endregion
