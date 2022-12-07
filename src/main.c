@@ -14,7 +14,16 @@ int randomTimeInTransit() {
 int main() {
 
     input *userInput;
-    Edge *adjMatrix;
+    Edge *adjMatrix = initializeAdjMatrix(10);
+
+    randomConnectedGraph(10,12,240,3,3, adjMatrix,"graph.gv");
+    printf("\ngraph success");
+
+    dijkstra(adjMatrix, 10,1,2,false);
+    printf("\ndijkstra success");
+
+    return 0;
+
     do {
         printUserManual();
         userInput = readInput();

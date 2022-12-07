@@ -17,10 +17,10 @@ void dijkstra(Edge* adjMatrix, int v, int src, int dest, bool airAllowed) {
     int count, mindistance, next, index, i, j;
     bool visited[v];
 
-    for (i = 0; i < v*v; i++) {
-        for (j = i+1; j <= v; j++) {
+    for (i = 1; i <= v; i++) {
+        for (j = i; j <= v; j++) {
             index = (i - 1) * v + j - 1;
-            printf("\nCost %d: %d", i, adjMatrix[index].timeInTransit);
+            printf("\nCost %d: %d", i-1, adjMatrix[index].timeInTransit);
         }
     }
 
@@ -29,7 +29,6 @@ void dijkstra(Edge* adjMatrix, int v, int src, int dest, bool airAllowed) {
             index = (i - 1) * v + j - 1;
             if (adjMatrix[index].timeInTransit == 0) {
                 cost[index] = INFINITY;
-
             }
             else {
                 if(airAllowed == true){
@@ -50,7 +49,7 @@ void dijkstra(Edge* adjMatrix, int v, int src, int dest, bool airAllowed) {
     printf("\nsrc: %d dest: %d", src, dest);
 
     for (i = 0; i < v; i++) {
-        dist[i] = cost[v-1];
+        dist[i] = cost[v];
         pred[i] = src;
         visited[i] = false;
 
@@ -98,6 +97,6 @@ void printSolution(int dist[], int pred[], int src, int v) {
         do {
             j = pred[j];
             printf("<-%d", j+1);
-        } while (j != src-1);
+        } while (j != src);
     }
 }

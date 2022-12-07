@@ -132,10 +132,19 @@ void printGraph(int v,
         }
     printf("}");
 }
+Edge* initializeAdjMatrix(int numNodes) {
+    Edge *ptrMatrix = (Edge *) calloc(numNodes * numNodes, sizeof(Edge));
 
+    if (ptrMatrix == NULL) {
+        printf("Not enough room for this size graph\n");
+
+        return NULL;
+    }
+
+    return ptrMatrix;
+}
 
 //connected graph
-
 void randomConnectedGraph(int numNodes,
                             int numEdges,
                             int maxWgt,
@@ -144,13 +153,6 @@ void randomConnectedGraph(int numNodes,
                             Edge *adjMatrix,
                             char *outFile) {
     int i, j, count, index, *tree;
-
-
-    if ((adjMatrix = (Edge *) calloc(numNodes * numNodes, sizeof(Edge)))
-        == NULL) {
-        printf("Not enough room for this size graph\n");
-        return;
-    }
 
 
     if ((tree = (int *) calloc(numNodes, sizeof(int))) == NULL) {
@@ -225,9 +227,9 @@ void randomConnectedGraph(int numNodes,
         count++;
 
     }
-
     printf("Printed Graph \n");
     printGraph(numNodes, count, outFile, adjMatrix);
+/*
 
     printf("Printed pathfinding \n");
     dijkstra(adjMatrix,
@@ -235,6 +237,6 @@ void randomConnectedGraph(int numNodes,
              1,
              2,
              false);
-
+*/
     free(tree);
 }
