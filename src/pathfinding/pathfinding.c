@@ -12,7 +12,7 @@
 
 void printSolution(int dist[], int pred[], int src, int v);
 
-void dijkstra(Edge* adjMatrix, int v, int src, int dest, bool airAllowed) {
+void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     int dist[v], pred[v], cost[v*v];
     int count, mindistance, next, index, i, j;
     bool visited[v];

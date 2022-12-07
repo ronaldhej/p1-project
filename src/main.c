@@ -14,7 +14,7 @@ int randomTimeInTransit() {
 int main() {
 
     input *userInput;
-    Edge *adjMatrix;
+    Edge *adjMatrix = NULL;
     do {
         printUserManual();
         userInput = readInput();

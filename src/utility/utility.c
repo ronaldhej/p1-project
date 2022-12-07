@@ -36,7 +36,7 @@ input* readInput() {
 #pragma region local functions
 
 //different behavior determined by option
-void handleOption(input* _input, Edge* adjMatrix) {
+void handleOption(input* _input, Edge adjMatrix[]) {
     int nVertices;
     switch (_input->option) {
 

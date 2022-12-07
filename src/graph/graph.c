@@ -226,15 +226,7 @@ void randomConnectedGraph(int numNodes,
 
     }
 
-    printf("Printed Graph \n");
     printGraph(numNodes, count, outFile, adjMatrix);
-
-    printf("Printed pathfinding \n");
-    dijkstra(adjMatrix,
-             numNodes,
-             1,
-             2,
-             false);
 
     free(tree);
 }
