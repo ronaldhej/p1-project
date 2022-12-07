@@ -12,16 +12,20 @@ int randomTimeInTransit() {
 }
 
 int main() {
+    int numVertices = 100;
 
     input *userInput;
-    Edge *adjMatrix = initializeAdjMatrix(10);
+    Edge *adjMatrix = initializeAdjMatrix(numVertices);
 
-    randomConnectedGraph(10,12,240,3,3, adjMatrix,"graph.gv");
-    printf("\ngraph success");
+    //randomConnectedGraph(10,12,240,3,3, adjMatrix,"graph.gv");
+    //randomConnectedGraph(6,8,240,2,2, adjMatrix,"graph.gv");
+    randomConnectedGraph(numVertices,120,240,4,12, adjMatrix,"graph.gv");
 
-    dijkstra(adjMatrix, 10,1,2,false);
-    printf("\ndijkstra success");
+    dijkstra(adjMatrix, numVertices,1,2,true);
 
+
+    free(userInput);
+    free(adjMatrix);
     return 0;
 
     do {
@@ -30,8 +34,6 @@ int main() {
         handleOption(userInput, adjMatrix);
 
     } while(userInput->option != 'q');
-    free(userInput);
-    free(adjMatrix);
 
   return 0;
 }

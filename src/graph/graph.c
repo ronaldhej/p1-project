@@ -42,16 +42,22 @@ int generateWeight(Edge edge) {
     return weight;
 }
 
-int minDistance(int dist[], bool sptSet[]) {
-    int min = INT_MAX, min_index;
+//itialize adjacency matrix and return the pointer
+Edge* initializeAdjMatrix(int numNodes) {
+    Edge *ptrMatrix = (Edge *) calloc(numNodes * numNodes, sizeof(Edge));
 
-    for (int v = 0; v < V; v++) {
-        if (sptSet[v] == false && dist[v] <= min) {
-            min = dist[v], min_index = v;
-        }
+    if (ptrMatrix == NULL) {
+        printf("Not enough room for this size graph\n");
+
+        return NULL;
     }
 
-    return min_index;
+    return ptrMatrix;
+}
+
+//convert 2D array coords to 1D array index
+int indexFromCoords(int x, int y, int rowLength) {
+    return y * rowLength + x;
 }
 
 //  Full disclosure, this code is from  Richard Johnsonbaugh and Martin Kalin from the
@@ -131,17 +137,6 @@ void printGraph(int v,
             }
         }
     printf("}");
-}
-Edge* initializeAdjMatrix(int numNodes) {
-    Edge *ptrMatrix = (Edge *) calloc(numNodes * numNodes, sizeof(Edge));
-
-    if (ptrMatrix == NULL) {
-        printf("Not enough room for this size graph\n");
-
-        return NULL;
-    }
-
-    return ptrMatrix;
 }
 
 //connected graph
