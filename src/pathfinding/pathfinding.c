@@ -11,8 +11,6 @@
 #define V 10
 #define INFINITY 9999
 
-void printSolution(int dist[], int pred[], int src, int v);
-
 void printMatrix(int matrix[], int length) {
     for (int i = 0; i < length*length; i++) {
         if (matrix[i] == INFINITY) {
@@ -50,10 +48,6 @@ bool fullyVisited(bool visited[], int numVertices) {
         if (visited[i] == false) return false;
     }
     return true;
-}
-
-void ensureMatrixSymmetry(int matrix[], int numVertices) {
-    return;
 }
 
 void examineVertex(int vertIndex, int currentVert, int vert, int cost[], int dist[], int pred[], bool visited[]) {
@@ -109,7 +103,6 @@ void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     //print cost matrix
     //printMatrix(cost, v);
 
-    printf("\nsrc: %d dest: %d\n", src, dest);
     //decrement src & dest
     //ie. vertex 1 would in code be vertex 0
     src--;
@@ -137,27 +130,17 @@ void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
             examineVertex(vertIndex, currentVert, vert, cost, dist, pred, visited);
         }
 
-        //visit next vertex unless fully visited
+        //visit next vertex unless graph has been fully visited
         if (fullyVisited(visited, v)) break; //<- probably belongs inside while statement
         currentVert = shortestUnvisitedVertex(dist, visited, v);
         visited[currentVert] = true;
         count++;
     }
-    printf("\ncount:%d\n", count);
-
-    /*
-    for (i = 0; i < v; i++) {
-        printf("vert[%d] distance :\t%d\n",(i+1),dist[i]);
-    }
-    printf("\n");
-    for (i = 0; i < v; i++) {
-        printf("predecessor to vert[%d] :\t%d\n",(i+1),pred[i]+1);
-    }
-     */
+    //printf("\ncount:%d\n", count);
 
     //solution
     printf("%s", (airAllowed) ? "AIR " : "RAIL " );
-    printf("SOLUTION : \n");
+    printf("ROUTE : \n");
     printf("%d", dest+1);
     int vertex = pred[dest];
     while (vertex != src) {
@@ -166,45 +149,4 @@ void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
         vertex = pred[vertex];
     }
     printf(" <- %d", src+1);
-    return;
-    while (count < v - 1) {
-        mindistance = INFINITY;
-
-        for (i = 0; i < v; i++)
-            if (dist[i] < mindistance && visited[i] == false) {
-                mindistance = dist[i];
-                next = i;
-            }
-
-        visited[next] = true;
-        for (i = 1; i < v; i++){
-            for (j = i+1; j <= v; j++){
-                index = (i - 1) * v + j - 1;
-                if (visited[i] == false)
-                    if (mindistance + cost[index] < dist[i]) {
-                        dist[i] = mindistance + cost[index];
-                        pred[i] = next;
-                }
-            }
-        }
-        count++;
-    }
-
-    printSolution(dist, pred, src, v);
-}
-
-void printSolution(int dist[], int pred[], int src, int v) {
-    printf("\nVertex \t\t Distance from Source");
-    for (int i = 0; i < v; i++) {
-        printf("\n%d \t\t\t\t %d", i+1, dist[i]);
-    }
-
-    for (int i = 0; i < v; i++) {
-        printf("\nPath to node %d = %d", i+1, i+1);
-        int j = i;
-        do {
-            j = pred[j];
-            printf("<-%d", j+1);
-        } while (j != src);
-    }
 }

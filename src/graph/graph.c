@@ -36,6 +36,7 @@ int generateWeight(Edge edge) {
 //allocates memory for numVertices*numVertices Edges
 Edge* initializeAdjMatrix(int numVertices) {
     int numEdges = numVertices*numVertices;
+
     Edge *ptrMatrix = (Edge *) malloc(numEdges * sizeof(Edge*));
 
     if (ptrMatrix == NULL) {
@@ -138,7 +139,7 @@ void printGraph(int v,
 }
 
 //connected graph
-void randomConnectedGraph(int numNodes,
+void randomConnectedGraph(int numVertices,
                             int numEdges,
                             int maxWgt,
                             int airportNum,
@@ -148,7 +149,7 @@ void randomConnectedGraph(int numNodes,
     int i, j, count, index, *tree;
 
 
-    if ((tree = (int *) calloc(numNodes, sizeof(int))) == NULL) {
+    if ((tree = (int *) calloc(numVertices, sizeof(int))) == NULL) {
         printf("Not enough room for this size graph\n");
         free(adjMatrix);
         return;
@@ -157,8 +158,8 @@ void randomConnectedGraph(int numNodes,
     printf("\n\tBeginning construction of graph.\n");
 
     /*  Generate a random permutation in the array tree. */
-    initArray(tree, numNodes);
-    permute(tree, numNodes);
+    initArray(tree, numVertices);
+    permute(tree, numVertices);
 
     /*  Next generate a random spanning tree.
         The algorithm is:
@@ -169,17 +170,17 @@ void randomConnectedGraph(int numNodes,
      */
 
     printf("\n\tBuilding 1D array.\n");
-    for (i = 1; i < numNodes; i++) {
+    for (i = 1; i < numVertices; i++) {
         j = ran(i);
-        adjMatrix[tree[i] * numNodes + tree[j]].timeInTransit =
-        adjMatrix[tree[j] * numNodes + tree[i]].timeInTransit = 1 + ran(maxWgt);
+        adjMatrix[tree[i] * numVertices + tree[j]].timeInTransit =
+        adjMatrix[tree[j] * numVertices + tree[i]].timeInTransit = 1 + ran(maxWgt);
     }
 
     printf("\n\tAdding additional random edges.\n");
     /* Add additional random edges until achieving at least desired number */
-    for (count = numNodes - 1; count < numEdges;) {
-        i = ran(numNodes);
-        j = ran(numNodes);
+    for (count = numVertices - 1; count < numEdges;) {
+        i = ran(numVertices);
+        j = ran(numVertices);
 
         if (i == j)
             continue;
@@ -187,7 +188,7 @@ void randomConnectedGraph(int numNodes,
         if (i > j)
             swap(&i, &j);
 
-        index = i * numNodes + j;
+        index = i * numVertices + j;
         if (!adjMatrix[index].timeInTransit) {
             adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
             count++;
@@ -199,11 +200,11 @@ void randomConnectedGraph(int numNodes,
     for(count = 0; count < airportNum;) {
         int numRoutes = ran(maxAirRoutesPerHub);
 
-        i = ran(numNodes);
+        i = ran(numVertices);
 
         // Loop to add multiple routes from same airport hub
         for (int currRoutes = 0; currRoutes < numRoutes;) {
-            j = ran(numNodes);
+            j = ran(numVertices);
 
             if (i == j)
                 continue;
@@ -211,7 +212,7 @@ void randomConnectedGraph(int numNodes,
             if (i > j)
                 swap(&i, &j);
 
-            index = i * numNodes + j;
+            index = i * numVertices + j;
 
             if(!adjMatrix[index].timeInTransit && !adjMatrix[index].isAir) {
                 adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
@@ -224,12 +225,12 @@ void randomConnectedGraph(int numNodes,
 
     }
     printf("Printed Graph \n");
-    printGraph(numNodes, count, outFile, adjMatrix);
+    printGraph(numVertices, count, outFile, adjMatrix);
 /*
 
     printf("Printed pathfinding \n");
     dijkstra(adjMatrix,
-             numNodes,
+             numVertices,
              1,
              2,
              false);

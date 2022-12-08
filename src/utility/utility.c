@@ -24,9 +24,11 @@ void printUserManual() {
            "User options:\n"
            "t:    Calculate travel time\n"
            "q:    Exit program\n"
+           "-----------------------\n"
            "Developer options:\n"
-           "g:    Generate a graph using specified seed\n\n"
+           "g:    Generate a graph using specified seed\n"
            );
+    printf("-----------------------\n");
 }
 
 //reads Input from the user, returns Input
@@ -41,8 +43,17 @@ Input* readInput() {
     return userInput;
 }
 
+//Enter anything to continue.
+//Used to give the user a chance to view outputs
+void waitForUser() {
+    printf("\nEnter anything to continue:\n");
+    char _;
+    scanf(" %c", &_);
+}
+
 void calculateRoutes(Edge *adjMatrix, int numVertices, Input* input) {
     //run dijkstra on adjacency matrix using both modes of transportation
+    printf("\ntravelling from %d to %d\n", input->startingLocation, input->finalDestination);
     dijkstra(adjMatrix,
              numVertices,
              input->startingLocation,
@@ -114,10 +125,6 @@ void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int 
                     if(confirm != 'y' && confirm != 'n') printf("Please enter y for yes or n for no:\n");
                 } while(confirm != 'y' && confirm != 'n');
             } while(confirm == 'n');
-
-
-            printf("\n%d->", _input->startingLocation);
-            printf("%d\n",_input->finalDestination);
 
             //make sure number of vertices is defined
             if (numVertices == NULL) {

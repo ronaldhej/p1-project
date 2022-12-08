@@ -21,6 +21,7 @@ typedef struct {
 
 void printUserManual();
 Input* readInput();
+void waitForUser();
 void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int *numVertices);
 bool validateGraphValues(GraphValues *graphValues);
 

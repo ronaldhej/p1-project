@@ -12,7 +12,7 @@ int randomTimeInTransit() {
 }
 
 int main() {
-    setbuf(stdout, 0);
+    //setbuf(stdout, 0); //enables console output when debugging
     int numVertices = 0;
 
     Input *userInput;
@@ -26,11 +26,9 @@ int main() {
     graphValues->maxHubs = 0;
     graphValues->maxAirRoutes = 0;
 
-    //randomConnectedGraph(10,12,240,3,3, adjMatrix,"graph.gv");
-    //randomConnectedGraph(6,8,240,2,2, adjMatrix,"graph.gv");
-    //randomConnectedGraph(numVertices,120,240,4,12, adjMatrix,"graph.gv");
-    //dijkstra(adjMatrix, numVertices,1,2,true);
+    //TODO: initialize adjacency matrix if user only wants to travel
 
+    //main loop
     do {
         if (validateGraphValues(graphValues)) {
             free(adjMatrix);
@@ -46,7 +44,14 @@ int main() {
                     adjMatrix,
                     outFile);
             numVertices = graphValues->numVertices;
+
+            graphValues->numVertices = 0;
+            graphValues->numEdges = 0;
+            graphValues->maxWeight = 0;
+            graphValues->maxHubs = 0;
+            graphValues->maxAirRoutes = 0;
         }
+        waitForUser();
 
         printUserManual();
         userInput = readInput();
@@ -54,6 +59,7 @@ int main() {
 
     } while(userInput->option != 'q');
 
+    //cleanup and exit
     free(graphValues);
     free(userInput);
     free(adjMatrix);
