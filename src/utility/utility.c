@@ -41,9 +41,37 @@ Input* readInput() {
     return userInput;
 }
 
-#pragma region local functions
+void calculateRoutes(Edge *adjMatrix, int numVertices, Input* input) {
+    dijkstra(adjMatrix,
+             numVertices,
+             input->startingLocation,
+             input->finalDestination,
+             false);
 
-//different behavior determined by option
+    dijkstra(adjMatrix,
+             numVertices,
+             input->startingLocation,
+             input->finalDestination,
+             true);
+}
+
+//Simple validation of graph values.
+//In this case making sure no value is zero.
+bool validateGraphValues(GraphValues *graphValues) {
+    if (graphValues->numVertices == 0) return false;
+    if (graphValues->numEdges == 0) return false;
+    if (graphValues->maxWeight == 0) return false;
+    if (graphValues->maxHubs == 0) return false;
+    if (graphValues->maxAirRoutes == 0) return false;
+
+    return true;
+}
+
+void setupGraphValues(GraphValues *graphValues) {
+
+}
+
+//Different behavior determined by option.
 void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int *numVertices) {
     switch (_input->option) {
 
@@ -74,22 +102,13 @@ void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int 
             printf("\n%d->", _input->startingLocation);
             printf("%d\n",_input->finalDestination);
 
+            //make sure number of vertices is defined
             if (numVertices == NULL) {
                 printf("nVertices is undeclared!\n");
                 break;
             }
+            calculateRoutes(adjMatrix, *numVertices, _input);
 
-            dijkstra(adjMatrix,
-                     *numVertices,
-                     _input->startingLocation,
-                     _input->finalDestination,
-                     false);
-
-            dijkstra(adjMatrix,
-                     *numVertices,
-                     _input->startingLocation,
-                     _input->finalDestination,
-                     true);
             break;
         }
 
@@ -134,5 +153,3 @@ void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int 
             break;
     }
 }
-
-#pragma endregion

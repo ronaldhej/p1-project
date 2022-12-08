@@ -22,6 +22,7 @@ typedef struct {
 void printUserManual();
 Input* readInput();
 void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int *numVertices);
+bool validateGraphValues(GraphValues *graphValues);
 
 
 #endif //P_1_UTILITY_H

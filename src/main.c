@@ -33,7 +33,7 @@ int main() {
     //dijkstra(adjMatrix, numVertices,1,2,true);
 
     do {
-        if (graphValues->numVertices != 0) {
+        if (validateGraphValues(graphValues)) {
             adjMatrix = initializeAdjMatrix(numVertices);
 
             randomConnectedGraph(
