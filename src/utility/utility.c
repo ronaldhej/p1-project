@@ -42,6 +42,7 @@ Input* readInput() {
 }
 
 void calculateRoutes(Edge *adjMatrix, int numVertices, Input* input) {
+    //run dijkstra on adjacency matrix using both modes of transportation
     dijkstra(adjMatrix,
              numVertices,
              input->startingLocation,
@@ -69,6 +70,22 @@ bool validateGraphValues(GraphValues *graphValues) {
 
 void setupGraphValues(GraphValues *graphValues) {
 
+    printf("\n_____ Graph setup wizard:\n");
+
+    printf("[1/5] Number of vertices:  ");
+    scanf(" %d", &graphValues->numVertices);
+
+    printf("[2/5] Number of edges:  ");
+    scanf(" %d", &graphValues->numEdges);
+
+    printf("[3/5] Maximum value for weights: ");
+    scanf(" %d", &graphValues->maxWeight);
+
+    printf("[4/5] Number of airport hubs: ");
+    scanf(" %d", &graphValues->maxHubs);
+
+    printf("[5/5] Maximum air routes per airport hub: ");
+    scanf(" %d", &graphValues->maxAirRoutes);
 }
 
 //Different behavior determined by option.
@@ -118,32 +135,7 @@ void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int 
 
 //DEVELOPER------
         case 'g': {
-            int nEdges, maxWgt, nAirports, maxAirPerHub;
-
-            printf("\n_____ Graph setup wizard:\n");
-
-            printf("[1/5] Number of vertices:  ");
-            scanf(" %d", numVertices);
-
-            printf("[2/5] Number of edges:  ");
-            scanf(" %d", &nEdges);
-
-            printf("[3/5] Maximum value for weights: ");
-            scanf(" %d", &maxWgt);
-
-            printf("[4/5] Number of airport hubs: ");
-            scanf(" %d", &nAirports);
-
-            printf("[5/5] Maximum air routes per airport hub: ");
-            scanf(" %d", &maxAirPerHub);
-
-            printf("\nGenerating graph...");
-            graphValues->numVertices = *numVertices;
-            graphValues->numEdges = nEdges;
-            graphValues->maxWeight = maxWgt;
-            graphValues->maxHubs = nAirports;
-            graphValues->maxAirRoutes = maxAirPerHub;
-
+            setupGraphValues(graphValues);
             break;
         }
 

@@ -15,7 +15,7 @@ typedef struct {
     bool isAir;
 } Edge;
 
-Edge* initializeAdjMatrix(int numNodes);
+Edge* initializeAdjMatrix(int numVertices);
 int indexFromCoords(int x, int y, int rowLength);
 
 void randomConnectedGraph(int numNodes,

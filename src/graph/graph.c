@@ -6,23 +6,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../pathfinding/pathfinding.h"
+typedef struct {
+    int timeInTransit;
+    bool isAir;
+} Edge;
 
 // V is number of vertices
 int V = 1000;
-
-typedef struct {
-    int ID;
-    char Title;
-} Vertex;
-
-typedef struct {
-    int timeTo;
-    int timeDep;
-    int timeIn;
-    int timeArr;
-    int timeFrom;
-} NodeWeight;
 
 // Replace with travel timeInTransit formula
 int generateWeight(Edge edge) {
@@ -42,14 +32,22 @@ int generateWeight(Edge edge) {
     return weight;
 }
 
-//itialize adjacency matrix and return the pointer
-Edge* initializeAdjMatrix(int numNodes) {
-    Edge *ptrMatrix = (Edge *) calloc(numNodes * numNodes, sizeof(Edge));
+//initialize adjacency matrix and return the pointer
+//allocates memory for numVertices*numVertices Edges
+Edge* initializeAdjMatrix(int numVertices) {
+    int numEdges = numVertices*numVertices;
+    Edge *ptrMatrix = (Edge *) malloc(numEdges * sizeof(Edge*));
 
     if (ptrMatrix == NULL) {
         printf("Not enough room for this size graph\n");
 
         return NULL;
+    }
+
+    //initialize all edges
+    for (int edge = 0; edge < numEdges; edge++) {
+        ptrMatrix[edge].timeInTransit = 0;
+        ptrMatrix[edge].isAir = false;
     }
 
     return ptrMatrix;

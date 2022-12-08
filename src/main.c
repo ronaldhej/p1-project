@@ -13,7 +13,7 @@ int randomTimeInTransit() {
 
 int main() {
     setbuf(stdout, 0);
-    int numVertices = 100;
+    int numVertices = 0;
 
     Input *userInput;
     GraphValues *graphValues = malloc(sizeof(GraphValues));
@@ -29,21 +29,23 @@ int main() {
     //randomConnectedGraph(10,12,240,3,3, adjMatrix,"graph.gv");
     //randomConnectedGraph(6,8,240,2,2, adjMatrix,"graph.gv");
     //randomConnectedGraph(numVertices,120,240,4,12, adjMatrix,"graph.gv");
-
     //dijkstra(adjMatrix, numVertices,1,2,true);
 
     do {
         if (validateGraphValues(graphValues)) {
-            adjMatrix = initializeAdjMatrix(numVertices);
+            free(adjMatrix);
+            adjMatrix = initializeAdjMatrix(graphValues->numVertices);
 
+            printf("\nGenerating graph...");
             randomConnectedGraph(
-                    numVertices,
+                    graphValues->numVertices,
                     graphValues->numEdges,
                     graphValues->maxWeight,
                     graphValues->maxHubs,
                     graphValues->maxAirRoutes,
                     adjMatrix,
                     outFile);
+            numVertices = graphValues->numVertices;
         }
 
         printUserManual();
