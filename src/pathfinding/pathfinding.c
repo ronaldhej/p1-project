@@ -62,19 +62,12 @@ void examineVertex(int vertIndex, int currentVert, int vert, int cost[], int dis
 
 void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     int dist[v], pred[v], cost[v*v];
-    int count, mindistance, next, index, i, j;
+    int count, i;
     bool visited[v];
-
-    /*for (i = 1; i <= v; i++) {
-        for (j = i; j <= v; j++) {
-            index = (i - 1) * v + j - 1;
-            printf("\nCost %d: %d", i-1, adjMatrix[index].timeInTransit);
-        }
-    }*/
 
     //populate cost matrix
     for (i = 0; i < v*v; i++) {
-        //wierd inverse indexing
+        //weird inverse indexing
         int x = (int) floor((double) i / (double) v);
         int y = i % v;
         cost[i] = INFINITY;
