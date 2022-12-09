@@ -6,26 +6,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// V is number of vertices
-int V = 1000;
-
 typedef struct {
     int timeInTransit;
     bool isAir;
 } Edge;
 
-typedef struct {
-    int ID;
-    char Title;
-} Vertex;
-
-typedef struct {
-    int timeTo;
-    int timeDep;
-    int timeIn;
-    int timeArr;
-    int timeFrom;
-} NodeWeight;
+// V is number of vertices
+int V = 1000;
 
 // Replace with travel timeInTransit formula
 int generateWeight(Edge edge) {
@@ -45,16 +32,31 @@ int generateWeight(Edge edge) {
     return weight;
 }
 
-int minDistance(int dist[], bool sptSet[]) {
-    int min = INT_MAX, min_index;
+//initialize adjacency matrix and return the pointer
+//allocates memory for numVertices*numVertices Edges
+Edge* initializeAdjMatrix(int numVertices) {
+    int numEdges = numVertices*numVertices;
 
-    for (int v = 0; v < V; v++) {
-        if (sptSet[v] == false && dist[v] <= min) {
-            min = dist[v], min_index = v;
-        }
+    Edge *ptrMatrix = (Edge *) malloc(numEdges * sizeof(Edge*));
+
+    if (ptrMatrix == NULL) {
+        printf("Not enough room for this size graph\n");
+
+        return NULL;
     }
 
-    return min_index;
+    //initialize all edges
+    for (int edge = 0; edge < numEdges; edge++) {
+        ptrMatrix[edge].timeInTransit = 0;
+        ptrMatrix[edge].isAir = false;
+    }
+
+    return ptrMatrix;
+}
+
+//convert 2D array coords to 1D array index
+int indexFromCoords(int x, int y, int rowLength) {
+    return y * rowLength + x;
 }
 
 //  Full disclosure, this code is from  Richard Johnsonbaugh and Martin Kalin from the
@@ -118,29 +120,36 @@ void printGraph(int v,
     fprintf(fp, "}");
     fclose(fp);
     printf("\tGraph is written to file %s.\n", out_file);
+
+    printf("graph G {\n");
+    printf("\tlayout=fdp\n\tsplines=true\n\tK=2\n\tnode [shape=circle]\n");
+    for (i = 1; i < v; i++)
+        for (j = i + 1; j <= v; j++) {
+            index = (i - 1) * v + j - 1;
+            if (adjMatrix[index].timeInTransit) {
+                int weight = adjMatrix[index].timeInTransit;
+                if (adjMatrix[index].isAir) {
+                    printf("%5d -- %5d [label=%5d, weight=%5d, color=red]\n", i, j, weight, weight);
+                } else {
+                    printf("%5d -- %5d [label=%5d, weight=%5d]\n", i, j, weight, weight);
+                }
+            }
+        }
+    printf("}");
 }
 
-
 //connected graph
-
-void randomConnectedGraph(int numNodes,
+void randomConnectedGraph(int numVertices,
                             int numEdges,
                             int maxWgt,
                             int airportNum,
                             int maxAirRoutesPerHub,
+                            Edge *adjMatrix,
                             char *outFile) {
     int i, j, count, index, *tree;
-    Edge *adjMatrix;
 
 
-    if ((adjMatrix = (Edge *) calloc(numNodes * numNodes, sizeof(Edge)))
-        == NULL) {
-        printf("Not enough room for this size graph\n");
-        return;
-    }
-
-
-    if ((tree = (int *) calloc(numNodes, sizeof(int))) == NULL) {
+    if ((tree = (int *) calloc(numVertices, sizeof(int))) == NULL) {
         printf("Not enough room for this size graph\n");
         free(adjMatrix);
         return;
@@ -149,8 +158,8 @@ void randomConnectedGraph(int numNodes,
     printf("\n\tBeginning construction of graph.\n");
 
     /*  Generate a random permutation in the array tree. */
-    initArray(tree, numNodes);
-    permute(tree, numNodes);
+    initArray(tree, numVertices);
+    permute(tree, numVertices);
 
     /*  Next generate a random spanning tree.
         The algorithm is:
@@ -160,16 +169,18 @@ void randomConnectedGraph(int numNodes,
           and a random vertex in the set {tree[ 0 ],...,tree[ i - 1 ]}.
      */
 
-    for (i = 1; i < numNodes; i++) {
+    printf("\n\tBuilding 1D array.\n");
+    for (i = 1; i < numVertices; i++) {
         j = ran(i);
-        adjMatrix[tree[i] * numNodes + tree[j]].timeInTransit =
-        adjMatrix[tree[j] * numNodes + tree[i]].timeInTransit = 1 + ran(maxWgt);
+        adjMatrix[tree[i] * numVertices + tree[j]].timeInTransit =
+        adjMatrix[tree[j] * numVertices + tree[i]].timeInTransit = 1 + ran(maxWgt);
     }
 
+    printf("\n\tAdding additional random edges.\n");
     /* Add additional random edges until achieving at least desired number */
-    for (count = numNodes - 1; count < numEdges;) {
-        i = ran(numNodes);
-        j = ran(numNodes);
+    for (count = numVertices - 1; count < numEdges;) {
+        i = ran(numVertices);
+        j = ran(numVertices);
 
         if (i == j)
             continue;
@@ -177,22 +188,23 @@ void randomConnectedGraph(int numNodes,
         if (i > j)
             swap(&i, &j);
 
-        index = i * numNodes + j;
+        index = i * numVertices + j;
         if (!adjMatrix[index].timeInTransit) {
             adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
             count++;
         }
     }
 
+    printf("\n\tAdding airport hubs.\n");
     //Airport hub adding loop
     for(count = 0; count < airportNum;) {
         int numRoutes = ran(maxAirRoutesPerHub);
 
-        i = ran(numNodes);
+        i = ran(numVertices);
 
         // Loop to add multiple routes from same airport hub
         for (int currRoutes = 0; currRoutes < numRoutes;) {
-            j = ran(numNodes);
+            j = ran(numVertices);
 
             if (i == j)
                 continue;
@@ -200,7 +212,7 @@ void randomConnectedGraph(int numNodes,
             if (i > j)
                 swap(&i, &j);
 
-            index = i * numNodes + j;
+            index = i * numVertices + j;
 
             if(!adjMatrix[index].timeInTransit && !adjMatrix[index].isAir) {
                 adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
@@ -212,9 +224,16 @@ void randomConnectedGraph(int numNodes,
         count++;
 
     }
+    printf("Printed Graph \n");
+    printGraph(numVertices, count, outFile, adjMatrix);
+/*
 
-    printGraph(numNodes, count, outFile, adjMatrix);
-
+    printf("Printed pathfinding \n");
+    dijkstra(adjMatrix,
+             numVertices,
+             1,
+             2,
+             false);
+*/
     free(tree);
-    free(adjMatrix);
 }

@@ -3,91 +3,150 @@
 //
 #include<stdio.h>
 #include<stdbool.h>
+#include<stdlib.h>
+#include <math.h>
+
+#include "../graph/graph.h"
 
 #define V 10
 #define INFINITY 9999
 
-void printSolution(int dist[], int pred[], int src);
+void printMatrix(int matrix[], int length) {
+    for (int i = 0; i < length*length; i++) {
+        if (matrix[i] == INFINITY) {
+            printf("_");
+        } else {
+            printf("%d", matrix[i]);
+        }
 
-typedef struct {
-    int weight;
-    bool isAir;
-} Edge;
+        if ((i+1) % length == 0 && i > 0)
+            printf("\n");
+        else
+            printf("\t");
+    }
+}
 
-void dijkstra(Edge adjMatrix[][V], int src, int dest, bool airAllowed) {
-    int dist[V], pred[V], cost[V][V];
-    int count, mindistance, next, i, j;
-    bool visited[V];
+//return unvisited vertex with shortest distance to source
+int shortestUnvisitedVertex(int const dist[], bool const visited[], int numVertex) {
+    int min = INFINITY;
+    int bestVert = -1;
 
-    for (i = 0; i < V; i++) {
-        for (j = 0; j < V; j++) {
-
-            if (adjMatrix[i][j].weight == 0) {
-                cost[i][j] = INFINITY;
-
-            }
-            else {
-                if(airAllowed == true){
-                    cost[i][j] = adjMatrix[i][j].weight;
-                }
-                else if(airAllowed == false){
-                    if(adjMatrix[i][j].isAir == true){
-                        cost[i][j] = INFINITY;
-                    }
-                    else if(adjMatrix[i][j].isAir == false){
-                        cost[i][j] = adjMatrix[i][j].weight;
-                    }
-                }
-            }
+    for (int i = 0; i < numVertex; i++) {
+        //compare vert to current best vert
+        if (!visited[i] && dist[i] < min) {
+            min = dist[i];
+            bestVert = i;
         }
     }
 
-    printf("\nsrc: %d dest: %d", src, dest);
+    return bestVert;
+}
 
-    for (i = 0; i < V; i++) {
-        dist[i] = cost[src][i];
-        pred[i] = src;
-        visited[i] = false;
+bool fullyVisited(bool visited[], int numVertices) {
+    //return if unvisited vertex exists
+    for (int i = 0; i < numVertices; i++) {
+        if (visited[i] == false) return false;
+    }
+    return true;
+}
+
+void examineVertex(int vertIndex, int currentVert, int vert, int cost[], int dist[], int pred[], bool visited[]) {
+    if (cost[vertIndex] < INFINITY && !visited[vertIndex]) {
+        int newDist = dist[currentVert] + cost[vertIndex];
+        if (newDist < dist[vert]) {
+            dist[vert] = newDist;
+            pred[vert] = currentVert;
+        }
+    }
+}
+
+void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
+    int dist[v], pred[v], cost[v*v];
+    int count, mindistance, next, index, i, j;
+    bool visited[v];
+
+    /*for (i = 1; i <= v; i++) {
+        for (j = i; j <= v; j++) {
+            index = (i - 1) * v + j - 1;
+            printf("\nCost %d: %d", i-1, adjMatrix[index].timeInTransit);
+        }
+    }*/
+
+    //populate cost matrix
+    for (i = 0; i < v*v; i++) {
+        //wierd inverse indexing
+        int x = (int) floor((double) i / (double) v);
+        int y = i % v;
+        cost[i] = INFINITY;
+
+        int adjIndex = indexFromCoords(x,y,v);
+        int t_transit = adjMatrix[adjIndex].timeInTransit;
+        //add cost for rail
+        if (!adjMatrix[adjIndex].isAir && t_transit > 0) {
+            //alternating x and y is to ensure symmetry
+            cost[indexFromCoords(x, y,v)] = t_transit;
+            cost[indexFromCoords(y,x,v)] = t_transit;
+        }
+
+        //air is not allowed -> iteration is done
+        if (!airAllowed) continue;
+
+        //add cost for air
+        if (adjMatrix[adjIndex].isAir && t_transit > 0) {
+            cost[indexFromCoords(x, y,v)] = t_transit;
+            cost[indexFromCoords(y,x,v)] = t_transit;
+        }
+    }
+
+    printf("\n");
+
+    //print cost matrix
+    //printMatrix(cost, v);
+
+    //decrement src & dest
+    //ie. vertex 1 would in code be vertex 0
+    src--;
+    dest--;
+
+    //initialize arrays
+    for (i = 0; i < v; i++) {
+        dist[i]     = INFINITY; //distance to source
+        pred[i]     = 0;
+        visited[i]  = false;
     }
 
     dist[src] = 0;
     visited[src] = true;
     count = 1;
 
-    while (count < V - 1) {
-        mindistance = INFINITY;
+    //visit vertices
+    int currentVert = src;
+    while(1) {
+        if (count >= 10000000) break; //FAILSAFE
 
-        for (i = 0; i < V; i++)
-            if (dist[i] < mindistance && visited[i] == false) {
-                mindistance = dist[i];
-                next = i;
-            }
+        //examine adjacent vertices
+        for (int vert = 0; vert <= v; vert++) {
+            int vertIndex = indexFromCoords(currentVert, vert, v);
+            examineVertex(vertIndex, currentVert, vert, cost, dist, pred, visited);
+        }
 
-        visited[next] = true;
-        for (i = 0; i < V; i++)
-            if (visited[i] == false)
-                if (mindistance + cost[next][i] < dist[i]) {
-                    dist[i] = mindistance + cost[next][i];
-                    pred[i] = next;
-                }
+        //visit next vertex unless graph has been fully visited
+        if (fullyVisited(visited, v)) break; //<- probably belongs inside while statement
+        currentVert = shortestUnvisitedVertex(dist, visited, v);
+        visited[currentVert] = true;
         count++;
     }
+    //printf("\ncount:%d\n", count);
 
-    printSolution(dist, pred, src);
-}
+    //solution
+    printf("%s", (airAllowed) ? "AIR " : "RAIL " );
+    printf("ROUTE : \n");
+    printf("%d", dest+1);
+    int vertex = pred[dest];
+    while (vertex != src) {
 
-void printSolution(int dist[], int pred[], int src) {
-    printf("\nVertex \t\t Distance from Source");
-    for (int i = 0; i < V; i++) {
-        printf("\n%d \t\t\t\t %d", i, dist[i]);
+        printf(" <- %d", vertex+1);
+        vertex = pred[vertex];
     }
-
-    for (int i = 0; i < V; i++) {
-        printf("\nPath to node %d = %d", i, i);
-        int j = i;
-        do {
-            j = pred[j];
-            printf("<-%d", j);
-        } while (j != src);
-    }
+    printf(" <- %d", src+1);
 }

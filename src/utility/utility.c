@@ -2,103 +2,153 @@
 #include <malloc.h>
 
 #include "../graph/graph.h"
+#include "../pathfinding/pathfinding.h"
 
 typedef struct {
     char option;
-    char startingLocation[64];
-    char finalDestination[64];
-} input;
+    int startingLocation;
+    int finalDestination;
+} Input;
 
-//local prototypes, only used in utility
-int handleOption(input* _input);
+typedef struct {
+    int numVertices;
+    int numEdges;
+    int maxWeight;
+    int maxHubs;
+    int maxAirRoutes;
+} GraphValues;
 
 //prints the initial text, informing the user of how to interact with the program
 void printUserManual() {
-    printf("--- Program options ---\n"
+    printf("\n--- Program options ---\n"
            "User options:\n"
            "t:    Calculate travel time\n"
+           "q:    Exit program\n"
+           "-----------------------\n"
            "Developer options:\n"
-           "g:    Generate a graph using specified seed\n\n"
+           "g:    Generate a graph using specified seed\n"
            );
+    printf("-----------------------\n");
 }
 
-//reads input from the user, returns input
-input* readInput() {
-    input *userInput = malloc(sizeof(input));
+//reads Input from the user, returns Input
+Input* readInput() {
+    Input *userInput = malloc(sizeof(Input));
 
-    do {
+    printf("Choose an option:");
+    scanf(" %c", &userInput->option);
 
-        printf("Choose an option: ");
-        scanf(" %c", &userInput->option);
-
-    //ask for input until input option is valid
-    } while (!handleOption(userInput));
+    //ask for Input until Input option is valid
 
     return userInput;
 }
 
-void handleInput(input *_input) {
-
+//Enter anything to continue.
+//Used to give the user a chance to view outputs
+void waitForUser() {
+    printf("\nEnter anything to continue:\n");
+    char _;
+    scanf(" %c", &_);
 }
 
-#pragma region local functions
+void calculateRoutes(Edge *adjMatrix, int numVertices, Input* input) {
+    //run dijkstra on adjacency matrix using both modes of transportation
+    printf("\ntravelling from %d to %d\n", input->startingLocation, input->finalDestination);
+    dijkstra(adjMatrix,
+             numVertices,
+             input->startingLocation,
+             input->finalDestination,
+             false);
 
-//different behavior determined by option
-int handleOption(input* _input) {
+    dijkstra(adjMatrix,
+             numVertices,
+             input->startingLocation,
+             input->finalDestination,
+             true);
+}
+
+//Simple validation of graph values.
+//In this case making sure no value is zero.
+bool validateGraphValues(GraphValues *graphValues) {
+    if (graphValues->numVertices == 0) return false;
+    if (graphValues->numEdges == 0) return false;
+    if (graphValues->maxWeight == 0) return false;
+    if (graphValues->maxHubs == 0) return false;
+    if (graphValues->maxAirRoutes == 0) return false;
+
+    return true;
+}
+
+void setupGraphValues(GraphValues *graphValues) {
+
+    printf("\n_____ Graph setup wizard:\n");
+
+    printf("[1/5] Number of vertices:  ");
+    scanf(" %d", &graphValues->numVertices);
+
+    printf("[2/5] Number of edges:  ");
+    scanf(" %d", &graphValues->numEdges);
+
+    printf("[3/5] Maximum value for weights: ");
+    scanf(" %d", &graphValues->maxWeight);
+
+    printf("[4/5] Number of airport hubs: ");
+    scanf(" %d", &graphValues->maxHubs);
+
+    printf("[5/5] Maximum air routes per airport hub: ");
+    scanf(" %d", &graphValues->maxAirRoutes);
+}
+
+//Different behavior determined by option.
+void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int *numVertices) {
     switch (_input->option) {
 
 //USER-----------
         case 't': {
-            printf("Please enter your starting location: ");
-            scanf(" %s", (char *) _input->startingLocation);
+            char confirm = 'x';
+            if (!adjMatrix) {
+                printf("Please generate graph first \n");
+                break;
+            }
+            do {
+                printf("Please enter your starting location: \n");
+                scanf(" %d", &_input->startingLocation);
 
-            printf("Please enter your final destination: ");
-            scanf(" %s", (char *) _input->finalDestination);
+                printf("Please enter your final destination: \n");
+                scanf(" %d",  &_input->finalDestination);
 
-            printf("Is %s -> %s your desired journey? (y/n):", _input->startingLocation,
-                   _input->finalDestination); //TO-DO Not implemented
+                printf("Is %d -> %d your desired journey? (y/n):\n", _input->startingLocation,
+                       _input->finalDestination);
+
+                do {
+                    scanf(" %c", &confirm);
+                    if(confirm != 'y' && confirm != 'n') printf("Please enter y for yes or n for no:\n");
+                } while(confirm != 'y' && confirm != 'n');
+            } while(confirm == 'n');
+
+            //make sure number of vertices is defined
+            if (numVertices == NULL) {
+                printf("nVertices is undeclared!\n");
+                break;
+            }
+            calculateRoutes(adjMatrix, *numVertices, _input);
+
+            break;
+        }
+
+        case 'q': {
             break;
         }
 
 //DEVELOPER------
         case 'g': {
-            int nVertices, nEdges, maxWgt, nAirports, maxAirPerHub;
-            char *outFile = "graph.gv";
-
-            printf("\n_____ Graph setup wizard:\n");
-
-            printf("[1/5] Number of vertices:  ");
-            scanf(" %d", &nVertices);
-
-            printf("[2/5] Number of edges:  ");
-            scanf(" %d", &nEdges);
-
-            printf("[3/5] Maximum value for weights: ");
-            scanf(" %d", &maxWgt);
-
-            printf("[4/5] Number of airport hubs: ");
-            scanf(" %d", &nAirports);
-
-            printf("[5/5] Maximum air routes per airport hub: ");
-            scanf(" %d", &maxAirPerHub);
-
-            printf("\nGenerating graph...");
-            randomConnectedGraph(
-                    nVertices,
-                    nEdges,
-                    maxWgt,
-                    nAirports,
-                    maxAirPerHub,
-                    outFile);
+            setupGraphValues(graphValues);
             break;
         }
 
         default:
-            //catch invalid input and return false
-            printf("Not a valid input\n");
-            return 0;
+            //catch invalid Input and return false
+            printf("Not a valid Input\n");
+            break;
     }
-    return 1;
 }
-
-#pragma endregion

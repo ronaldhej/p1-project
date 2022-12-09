@@ -15,12 +15,15 @@ typedef struct {
     bool isAir;
 } Edge;
 
+Edge* initializeAdjMatrix(int numVertices);
+int indexFromCoords(int x, int y, int rowLength);
 
 void randomConnectedGraph(int numNodes,
                           int numEdges,
                           int maxWgt,
                           int airportNum,
                           int maxAirRoutesPerHub,
+                          Edge *adjMatrix,
                           char *outFile);
 
 #endif //P_1_GRAPH_H
