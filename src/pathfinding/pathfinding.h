@@ -9,5 +9,6 @@
 
 void dijkstra(Edge* adjMatrix, int numNodes, int src, int dest, bool airAllowed);
 void printSolution(int dist[], int pred[], int src);
+int indexFromCoords(int x, int y, int rowLength);
 
 #endif //P_1_PATHFINDING_H

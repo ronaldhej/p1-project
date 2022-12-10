@@ -16,7 +16,6 @@ typedef struct {
 } Edge;
 
 Edge* initializeAdjMatrix(int numVertices);
-int indexFromCoords(int x, int y, int rowLength);
 
 void randomConnectedGraph(int numNodes,
                           int numEdges,

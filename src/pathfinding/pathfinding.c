@@ -11,6 +11,11 @@
 #define V 10
 #define INFINITY 9999
 
+//convert 2D array coords to 1D array index
+int indexFromCoords(int x, int y, int rowLength) {
+    return y * rowLength + x;
+}
+
 void printMatrix(int matrix[], int length) {
     for (int i = 0; i < length*length; i++) {
         if (matrix[i] == INFINITY) {
@@ -43,7 +48,7 @@ int shortestUnvisitedVertex(int const dist[], bool const visited[], int numVerte
 }
 
 bool fullyVisited(bool visited[], int numVertices) {
-    //return if unvisited vertex exists
+    //return false if unvisited vertex exists
     for (int i = 0; i < numVertices; i++) {
         if (visited[i] == false) return false;
     }

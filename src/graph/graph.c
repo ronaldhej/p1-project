@@ -54,11 +54,6 @@ Edge* initializeAdjMatrix(int numVertices) {
     return ptrMatrix;
 }
 
-//convert 2D array coords to 1D array index
-int indexFromCoords(int x, int y, int rowLength) {
-    return y * rowLength + x;
-}
-
 //  Full disclosure, this code is from  Richard Johnsonbaugh and Martin Kalin from the
 //  Department of Computer Science and Information Systems, they have a great way of generating
 //  connected graphs
