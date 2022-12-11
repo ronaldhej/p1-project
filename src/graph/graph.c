@@ -215,7 +215,7 @@ void randomConnectedGraph(int numVertices,
             index = i * numVertices + j;
 
             if(!adjMatrix[index].timeInTransit && !adjMatrix[index].isAir) {
-                adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
+                adjMatrix[index].timeInTransit = (1 + ran(maxWgt))/(maxWgt/2);
                 adjMatrix[index].isAir = true;
                 currRoutes++;
             }
