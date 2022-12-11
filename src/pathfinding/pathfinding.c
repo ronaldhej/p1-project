@@ -78,6 +78,27 @@ void examineVertex(int vertIndex, int currentVert, int vert, const int cost[], i
 #define R_DWELL_AT_DESTINATION      12
 #define R_TRANSFER_FROM_DESTINATION 21
 
+//returns a random signed offset using simple bell curve equation
+int bellcurveSpread(int spread) {
+    //random number between 0-1;
+    int decimalCount = 100;
+    double x = (double)(rand() % decimalCount) / decimalCount;
+
+    //bellcurve equation
+    double offset = 1.0/pow(1+pow(x, 2.0),(3.0/2.0));
+
+    //inverse offset
+    offset = 1-offset;
+    offset *= spread;
+
+    //50% chance of
+    if (rand() % 2 == 1) {
+        offset *= -1;
+    }
+
+    return (int)round(offset);
+}
+
 //calculate total travel time of journey in minutes
 int accumulateTime(const int pred[], Edge adjMatrix[], int v, int dest, int src) {
     int t_accumulated = 0;
@@ -94,11 +115,11 @@ int accumulateTime(const int pred[], Edge adjMatrix[], int v, int dest, int src)
         //add dwell time at location vertex and destination vertex
         //TODO: add bell curve spread
         if (edge.isAir) {
-            t_accumulated += A_DWELL_AT_LOCATION;
-            t_accumulated += A_DWELL_AT_DESTINATION;
+            t_accumulated += (A_DWELL_AT_LOCATION    + bellcurveSpread(20));
+            t_accumulated += (A_DWELL_AT_DESTINATION + bellcurveSpread(15));
         } else {
-            t_accumulated += R_DWELL_AT_LOCATION;
-            t_accumulated += R_DWELL_AT_DESTINATION;
+            t_accumulated += (R_DWELL_AT_LOCATION    + bellcurveSpread(6));
+            t_accumulated += (R_DWELL_AT_DESTINATION + bellcurveSpread(4));
         }
 
         toVertex = fromVertex;
@@ -192,5 +213,5 @@ void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     printf(" <- %d", src+1);
 
     int timeInMinutes = accumulateTime(pred, adjMatrix, v, dest, src);
-    printf("\nTotal travel time : %d minutes\n", timeInMinutes);
+    printf("\nTotal travel time : %d minutes\n", timeInMinutes); //TODO: print more detailed journey
 }
