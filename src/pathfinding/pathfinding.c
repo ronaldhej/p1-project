@@ -91,7 +91,7 @@ int bellcurveSpread(int spread) {
     offset = 1-offset;
     offset *= spread;
 
-    //50% chance of
+    //50% chance of offset being negative
     if (rand() % 2 == 1) {
         offset *= -1;
     }
