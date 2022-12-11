@@ -10,6 +10,7 @@
 
 #define V 10
 #define INFINITY 9999
+#define DOOR_TO_DOOR true
 
 //convert 2D array coords to 1D array index
 int indexFromCoords(int x, int y, int rowLength) {
@@ -55,7 +56,7 @@ bool fullyVisited(bool visited[], int numVertices) {
     return true;
 }
 
-void examineVertex(int vertIndex, int currentVert, int vert, int cost[], int dist[], int pred[], bool visited[]) {
+void examineVertex(int vertIndex, int currentVert, int vert, const int cost[], int dist[], int pred[], bool visited[]) {
     if (cost[vertIndex] < INFINITY && !visited[vertIndex]) {
         int newDist = dist[currentVert] + cost[vertIndex];
         if (newDist < dist[vert]) {
@@ -63,6 +64,48 @@ void examineVertex(int vertIndex, int currentVert, int vert, int cost[], int dis
             pred[vert] = currentVert;
         }
     }
+}
+
+//time constants for airports in minutes
+#define A_TRANSFER_TO_LOCATION      57
+#define A_DWELL_AT_LOCATION         118
+#define A_DWELL_AT_DESTINATION      39
+#define A_TRANSFER_FROM_DESTINATION 61
+
+//time constants for rail stations in minutes
+#define R_TRANSFER_TO_LOCATION      24
+#define R_DWELL_AT_LOCATION         20
+#define R_DWELL_AT_DESTINATION      12
+#define R_TRANSFER_FROM_DESTINATION 21
+
+//calculate total travel time of journey in minutes
+int accumulateTime(const int pred[], Edge adjMatrix[], int v, int dest, int src) {
+    int t_accumulated = 0;
+    int toVertex = dest;
+    int fromVertex = pred[toVertex];
+
+    //iterate through every section of a journey
+    while (toVertex != src) {
+
+        Edge edge = adjMatrix[indexFromCoords(toVertex, fromVertex, v)];
+        //add time of transit
+        t_accumulated += edge.timeInTransit;
+
+        //add dwell time at location vertex and destination vertex
+        //TODO: add bell curve spread
+        if (edge.isAir) {
+            t_accumulated += A_DWELL_AT_LOCATION;
+            t_accumulated += A_DWELL_AT_DESTINATION;
+        } else {
+            t_accumulated += R_DWELL_AT_LOCATION;
+            t_accumulated += R_DWELL_AT_DESTINATION;
+        }
+
+        toVertex = fromVertex;
+        fromVertex = (fromVertex != src) ? pred[fromVertex] : src;
+    }
+
+    return t_accumulated;
 }
 
 void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
@@ -147,4 +190,7 @@ void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
         vertex = pred[vertex];
     }
     printf(" <- %d", src+1);
+
+    int timeInMinutes = accumulateTime(pred, adjMatrix, v, dest, src);
+    printf("\nTotal travel time : %d minutes\n", timeInMinutes);
 }
