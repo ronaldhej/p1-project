@@ -8,8 +8,6 @@
 
 #include <stdbool.h>
 
-extern int V;
-
 typedef struct {
     int timeInTransit;
     bool isAir;
