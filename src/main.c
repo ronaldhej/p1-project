@@ -31,9 +31,9 @@ int main() {
 
     //TODO: initialize adjacency matrix if user only wants to travel
     //temporary for testing
-    adjMatrix = initializeAdjMatrix(10);
-    randomConnectedGraph(10,12,240,2,4,adjMatrix,seed, outFile);
-    numVertices = 10;
+    adjMatrix = initializeAdjMatrix(20);
+    randomConnectedGraph(20,25,100,3,8,adjMatrix,seed, outFile);
+    numVertices = 20;
 
     //main loop
     do {

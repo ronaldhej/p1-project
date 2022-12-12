@@ -17,12 +17,14 @@ typedef struct {
 //time constants for airports in minutes
 #define A_TRANSFER_TO_LOCATION      57
 #define A_DWELL_AT_LOCATION         118
+#define A_AVERAGE_TRANSIT           143
 #define A_DWELL_AT_DESTINATION      39
 #define A_TRANSFER_FROM_DESTINATION 61
 
 //time constants for rail stations in minutes
 #define R_TRANSFER_TO_LOCATION      24
 #define R_DWELL_AT_LOCATION         20
+#define R_AVERAGE_TRANSIT           198
 #define R_DWELL_AT_DESTINATION      12
 #define R_TRANSFER_FROM_DESTINATION 21
 
@@ -189,7 +191,7 @@ void randomConnectedGraph(int numVertices,
 
         //define time in transit
         adjMatrix[tree[i] * numVertices + tree[j]].timeInTransit =
-        adjMatrix[tree[j] * numVertices + tree[i]].timeInTransit = 1 + ran(maxWgt);
+        adjMatrix[tree[j] * numVertices + tree[i]].timeInTransit = R_AVERAGE_TRANSIT + bellcurveSpread(178);
 
         //define time of dwell departure
         adjMatrix[tree[i] * numVertices + tree[j]].dwellDeparture =
@@ -214,7 +216,7 @@ void randomConnectedGraph(int numVertices,
 
         index = i * numVertices + j;
         if (!adjMatrix[index].timeInTransit) {
-            adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
+            adjMatrix[index].timeInTransit = R_AVERAGE_TRANSIT + bellcurveSpread(178);
             adjMatrix[index].dwellDeparture = R_DWELL_AT_DESTINATION + bellcurveSpread(6);
             adjMatrix[index].dwellArrival = R_DWELL_AT_DESTINATION + bellcurveSpread(4);
             count++;
@@ -241,7 +243,7 @@ void randomConnectedGraph(int numVertices,
             index = i * numVertices + j;
 
             if(!adjMatrix[index].timeInTransit && !adjMatrix[index].isAir) {
-                adjMatrix[index].timeInTransit = (1 + ran(round(maxWgt/2)));
+                adjMatrix[index].timeInTransit = A_AVERAGE_TRANSIT + bellcurveSpread(98);
                 adjMatrix[index].isAir = true;
                 adjMatrix[index].dwellDeparture = A_DWELL_AT_LOCATION + bellcurveSpread(20);
                 adjMatrix[index].dwellArrival = A_DWELL_AT_DESTINATION + bellcurveSpread(20);
