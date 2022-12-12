@@ -12,3 +12,5 @@ add_executable(
         src/pathfinding/pathfinding.c
         src/pathfinding/pathfinding.h
 )
+
+target_link_libraries(p_1 m)
