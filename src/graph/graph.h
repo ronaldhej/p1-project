@@ -11,6 +11,8 @@
 typedef struct {
     int timeInTransit;
     bool isAir;
+    int dwellDeparture;
+    int dwellArrival;
 } Edge;
 
 Edge* initializeAdjMatrix(int numVertices);

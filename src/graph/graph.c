@@ -10,14 +10,49 @@
 typedef struct {
     int timeInTransit;
     bool isAir;
+    int dwellDeparture;
+    int dwellArrival;
 } Edge;
+
+//time constants for airports in minutes
+#define A_TRANSFER_TO_LOCATION      57
+#define A_DWELL_AT_LOCATION         118
+#define A_DWELL_AT_DESTINATION      39
+#define A_TRANSFER_FROM_DESTINATION 61
+
+//time constants for rail stations in minutes
+#define R_TRANSFER_TO_LOCATION      24
+#define R_DWELL_AT_LOCATION         20
+#define R_DWELL_AT_DESTINATION      12
+#define R_TRANSFER_FROM_DESTINATION 21
+
+//returns a random signed offset using simple bell curve equation
+int bellcurveSpread(int spread) {
+    //random number between 0-1;
+    int decimalCount = 100;
+    double x = (double)(rand() % decimalCount) / decimalCount;
+
+    //bellcurve equation
+    double offset = 1.0/pow(1+pow(x, 2.0),(3.0/2.0));
+
+    //inverse offset
+    offset = 1-offset;
+    offset *= spread;
+
+    //50% chance of offset being negative
+    if (rand() % 2 == 1) {
+        offset *= -1;
+    }
+
+    return (int)round(offset);
+}
 
 //initialize adjacency matrix and return the pointer
 //allocates memory for numVertices*numVertices Edges
 Edge* initializeAdjMatrix(int numVertices) {
     int numEdges = numVertices*numVertices;
 
-    Edge *ptrMatrix = (Edge *) malloc(numEdges * sizeof(Edge*));
+    Edge *ptrMatrix = (Edge *) calloc(numEdges*numEdges, sizeof(Edge*));
 
     if (ptrMatrix == NULL) {
         printf("Not enough room for this size graph\n");
@@ -151,8 +186,18 @@ void randomConnectedGraph(int numVertices,
     printf("\n\tBuilding 1D array.\n");
     for (i = 1; i < numVertices; i++) {
         j = ran(i);
+
+        //define time in transit
         adjMatrix[tree[i] * numVertices + tree[j]].timeInTransit =
         adjMatrix[tree[j] * numVertices + tree[i]].timeInTransit = 1 + ran(maxWgt);
+
+        //define time of dwell departure
+        adjMatrix[tree[i] * numVertices + tree[j]].dwellDeparture =
+        adjMatrix[tree[j] * numVertices + tree[i]].dwellDeparture = R_DWELL_AT_LOCATION + bellcurveSpread(6);
+
+        //define time of dwell arrival
+        adjMatrix[tree[i] * numVertices + tree[j]].dwellArrival =
+        adjMatrix[tree[j] * numVertices + tree[i]].dwellArrival = R_DWELL_AT_DESTINATION + bellcurveSpread(4);
     }
 
     printf("\n\tAdding additional random edges.\n");
@@ -170,6 +215,8 @@ void randomConnectedGraph(int numVertices,
         index = i * numVertices + j;
         if (!adjMatrix[index].timeInTransit) {
             adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
+            adjMatrix[index].dwellDeparture = R_DWELL_AT_DESTINATION + bellcurveSpread(6);
+            adjMatrix[index].dwellArrival = R_DWELL_AT_DESTINATION + bellcurveSpread(4);
             count++;
         }
     }
@@ -196,6 +243,8 @@ void randomConnectedGraph(int numVertices,
             if(!adjMatrix[index].timeInTransit && !adjMatrix[index].isAir) {
                 adjMatrix[index].timeInTransit = (1 + ran(round(maxWgt/2)));
                 adjMatrix[index].isAir = true;
+                adjMatrix[index].dwellDeparture = A_DWELL_AT_LOCATION + bellcurveSpread(20);
+                adjMatrix[index].dwellArrival = A_DWELL_AT_DESTINATION + bellcurveSpread(20);
                 currRoutes++;
             }
         }
