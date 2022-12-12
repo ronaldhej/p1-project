@@ -57,7 +57,8 @@ bool fullyVisited(bool visited[], int numVertices) {
 }
 
 void examineVertex(int vertIndex, int currentVert, int vert, const int cost[], int dist[], int pred[], bool visited[]) {
-    if (cost[vertIndex] < INFINITY && !visited[vertIndex]) {
+
+    if (cost[vertIndex] < INFINITY && !visited[vert]) {
         int newDist = dist[currentVert] + cost[vertIndex];
         if (newDist < dist[vert]) {
             dist[vert] = newDist;
@@ -143,10 +144,10 @@ int dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     //visit vertices
     int currentVert = src;
     while(1) {
-        if (count >= 10000000) break; //FAILSAFE
+        if (count >= 100000) break; //FAILSAFE
 
         //examine adjacent vertices
-        for (int vert = 0; vert <= v; vert++) {
+        for (int vert = 0; vert < v; vert++) {
             int vertIndex = indexFromCoords(currentVert, vert, v);
             examineVertex(vertIndex, currentVert, vert, cost, dist, pred, visited);
         }
@@ -167,6 +168,10 @@ int dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     while (vertex != src) {
 
         printf(" <- %d", vertex+1);
+        if (vertex == pred[vertex] && pred[vertex] != src) {
+            printf(" ERROR: stuck at vertex: %d\n", vertex+1);
+            break;
+        }
         vertex = pred[vertex];
     }
     printf(" <- %d", src+1);
