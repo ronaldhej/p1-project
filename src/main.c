@@ -23,17 +23,17 @@ int main() {
     Edge *adjMatrix;
     char *outFile = "graph.gv";
 
-    graphValues->numVertices = 0;
-    graphValues->numEdges = 0;
-    graphValues->maxWeight = 0;
-    graphValues->maxHubs = 0;
-    graphValues->maxAirRoutes = 0;
+    readValuesFromFile(graphValues);
 
-    //TODO: initialize adjacency matrix if user only wants to travel
     //temporary for testing
-    adjMatrix = initializeAdjMatrix(20);
-    randomConnectedGraph(20,25,100,3,8,adjMatrix,seed, outFile);
-    numVertices = 20;
+    adjMatrix = initializeAdjMatrix(graphValues->numVertices);
+    randomConnectedGraph(
+            graphValues->numVertices,
+            graphValues->numEdges,
+            graphValues->maxWeight,
+            graphValues->maxHubs,
+            graphValues->maxAirRoutes,
+            adjMatrix,seed, outFile);
 
     //main loop
     do {

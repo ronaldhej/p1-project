@@ -256,7 +256,10 @@ void randomConnectedGraph(int numVertices,
     }
     printf("Printed Graph \n");
     printGraph(numVertices, count, outFile, adjMatrix);
-/*
+
+    system("dot -Tsvg graph.gv -o output.svg");
+
+    /*
 
     printf("Printed pathfinding \n");
     dijkstra(adjMatrix,

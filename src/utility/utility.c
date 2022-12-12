@@ -18,6 +18,9 @@ typedef struct {
     int maxAirRoutes;
 } GraphValues;
 
+void writeValuesToFile(GraphValues *graphValues);
+void readValuesFromFile(GraphValues* graphValues);
+
 //prints the initial text, informing the user of how to interact with the program
 void printUserManual() {
     printf("\n--- Program options ---\n"
@@ -72,7 +75,6 @@ void calculateRoutes(Edge *adjMatrix, int numVertices, Input* input) {
 bool validateGraphValues(GraphValues *graphValues) {
     if (graphValues->numVertices == 0) return false;
     if (graphValues->numEdges == 0) return false;
-    if (graphValues->maxWeight == 0) return false;
     if (graphValues->maxHubs == 0) return false;
     if (graphValues->maxAirRoutes == 0) return false;
 
@@ -97,6 +99,8 @@ void setupGraphValues(GraphValues *graphValues) {
 
     printf("[5/5] Maximum air routes per airport hub: ");
     scanf(" %d", &graphValues->maxAirRoutes);
+
+    writeValuesToFile(graphValues);
 }
 
 //Different behavior determined by option.
@@ -151,4 +155,40 @@ void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int 
             printf("Not a valid Input\n");
             break;
     }
+}
+
+//graph values functions
+void readValuesFromFile(GraphValues* graphValues) {
+    graphValues->numVertices = 0;
+    graphValues->numEdges = 0;
+    graphValues->maxWeight = 0;
+    graphValues->maxHubs = 0;
+    graphValues->maxAirRoutes = 0;
+
+    FILE* file = fopen("data.txt", "r");
+    if (file == NULL) {
+        printf("Failed to open data file!\n");
+    }
+
+    fscanf(file, "%d", &graphValues->numVertices);
+    fscanf(file, "%d" , &graphValues->numEdges);
+    fscanf(file, "%d" , &graphValues->maxHubs);
+    fscanf(file, "%d" , &graphValues->maxAirRoutes);
+    fscanf(file, "%d" , &graphValues->maxAirRoutes);
+
+    fclose(file);
+}
+
+void writeValuesToFile(GraphValues *graphValues) {
+    FILE* file = fopen("data.txt", "w");
+    if (file == NULL) {
+        printf("Failed to open data file!\n");
+    }
+
+    fprintf(file, "%d\n", graphValues->numVertices);
+    fprintf(file, "%d\n" , graphValues->numEdges);
+    fprintf(file, "%d\n" , graphValues->maxHubs);
+    fprintf(file, "%d\n" , graphValues->maxAirRoutes);
+
+    fclose(file);
 }
