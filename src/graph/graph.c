@@ -5,32 +5,12 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 typedef struct {
     int timeInTransit;
     bool isAir;
 } Edge;
-
-// V is number of vertices
-int V = 1000;
-
-// Replace with travel timeInTransit formula
-int generateWeight(Edge edge) {
-    // NodeWeight node[nodeCount];
-
-    // node[nodeCount].timeTo = 0;
-    // node[nodeCount].timeDep = 0;
-    int timeIn = edge.timeInTransit;
-    // node[nodeCount].timeArr = 0;
-    // node[nodeCount].timeFrom = 0;
-
-    // bugs out every 4th iteration, resets i to 0
-    int weight = 0; // node[nodeCount].timeTo + node[nodeCount].timeDep +
-    // node[nodeCount].timeIn + node[nodeCount].timeArr +
-    // node[nodeCount].timeFrom;
-
-    return weight;
-}
 
 //initialize adjacency matrix and return the pointer
 //allocates memory for numVertices*numVertices Edges
@@ -54,9 +34,9 @@ Edge* initializeAdjMatrix(int numVertices) {
     return ptrMatrix;
 }
 
-//  Full disclosure, this code is from  Richard Johnsonbaugh and Martin Kalin from the
+//  Full disclosure, a lot of this code is from  Richard Johnsonbaugh and Martin Kalin from the
 //  Department of Computer Science and Information Systems, they have a great way of generating
-//  connected graphs
+//  connected graphs, it has however been modified to fit our use case
 
 void initArray(int *a, int end) {
     int i;
@@ -140,8 +120,12 @@ void randomConnectedGraph(int numVertices,
                             int airportNum,
                             int maxAirRoutesPerHub,
                             Edge *adjMatrix,
+                            int seed,
                             char *outFile) {
     int i, j, count, index, *tree;
+
+    //Set seed for rand
+    srand(seed);
 
 
     if ((tree = (int *) calloc(numVertices, sizeof(int))) == NULL) {
@@ -210,7 +194,7 @@ void randomConnectedGraph(int numVertices,
             index = i * numVertices + j;
 
             if(!adjMatrix[index].timeInTransit && !adjMatrix[index].isAir) {
-                adjMatrix[index].timeInTransit = 1 + ran(maxWgt);
+                adjMatrix[index].timeInTransit = (1 + ran(round(maxWgt/2)));
                 adjMatrix[index].isAir = true;
                 currRoutes++;
             }

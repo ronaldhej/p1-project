@@ -23,6 +23,7 @@ void randomConnectedGraph(int numNodes,
                           int airportNum,
                           int maxAirRoutesPerHub,
                           Edge *adjMatrix,
+                          int seed,
                           char *outFile);
 
 #endif //P_1_GRAPH_H

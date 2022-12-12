@@ -15,6 +15,9 @@ int main() {
     setbuf(stdout, 0); //enables console output when debugging
     int numVertices = 0;
 
+    //Replace seed with desired number
+    int seed = 1234;
+
     Input *userInput;
     GraphValues *graphValues = malloc(sizeof(GraphValues));
     Edge *adjMatrix;
@@ -29,7 +32,7 @@ int main() {
     //TODO: initialize adjacency matrix if user only wants to travel
     //temporary for testing
     adjMatrix = initializeAdjMatrix(10);
-    randomConnectedGraph(10,12,240,2,4,adjMatrix,outFile);
+    randomConnectedGraph(10,12,240,2,4,adjMatrix,seed, outFile);
     numVertices = 10;
 
     //main loop
@@ -46,6 +49,7 @@ int main() {
                     graphValues->maxHubs,
                     graphValues->maxAirRoutes,
                     adjMatrix,
+                    seed,
                     outFile);
             numVertices = graphValues->numVertices;
 
