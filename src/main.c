@@ -23,17 +23,19 @@ int main() {
     Edge *adjMatrix;
     char *outFile = "graph.gv";
 
-    readValuesFromFile(graphValues);
+    if (readValuesFromFile(graphValues)) {
+        adjMatrix = initializeAdjMatrix(graphValues->numVertices);
+        randomConnectedGraph(
+                graphValues->numVertices,
+                graphValues->numEdges,
+                graphValues->maxWeight,
+                graphValues->maxHubs,
+                graphValues->maxAirRoutes,
+                adjMatrix,seed, outFile);
+    } else {
+        printf("No graph exists, please generate a graph before travelling");
+    }
 
-    //temporary for testing
-    adjMatrix = initializeAdjMatrix(graphValues->numVertices);
-    randomConnectedGraph(
-            graphValues->numVertices,
-            graphValues->numEdges,
-            graphValues->maxWeight,
-            graphValues->maxHubs,
-            graphValues->maxAirRoutes,
-            adjMatrix,seed, outFile);
 
     //main loop
     do {

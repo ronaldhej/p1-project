@@ -19,7 +19,7 @@ typedef struct {
 } GraphValues;
 
 void writeValuesToFile(GraphValues *graphValues);
-void readValuesFromFile(GraphValues* graphValues);
+bool readValuesFromFile(GraphValues* graphValues);
 
 //prints the initial text, informing the user of how to interact with the program
 void printUserManual() {
@@ -158,7 +158,7 @@ void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int 
 }
 
 //graph values functions
-void readValuesFromFile(GraphValues* graphValues) {
+bool readValuesFromFile(GraphValues* graphValues) {
     graphValues->numVertices = 0;
     graphValues->numEdges = 0;
     graphValues->maxWeight = 0;
@@ -167,7 +167,8 @@ void readValuesFromFile(GraphValues* graphValues) {
 
     FILE* file = fopen("data.txt", "r");
     if (file == NULL) {
-        printf("Failed to open data file!\n");
+        printf("Failed to open data file! (read)\n");
+        return false;
     }
 
     fscanf(file, "%d", &graphValues->numVertices);
@@ -177,12 +178,13 @@ void readValuesFromFile(GraphValues* graphValues) {
     fscanf(file, "%d" , &graphValues->maxAirRoutes);
 
     fclose(file);
+    return true;
 }
 
 void writeValuesToFile(GraphValues *graphValues) {
     FILE* file = fopen("data.txt", "w");
     if (file == NULL) {
-        printf("Failed to open data file!\n");
+        printf("Failed to open data file! (write)\n");
     }
 
     fprintf(file, "%d\n", graphValues->numVertices);

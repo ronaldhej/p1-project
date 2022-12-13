@@ -25,7 +25,7 @@ void waitForUser();
 void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int *numVertices);
 bool validateGraphValues(GraphValues *graphValues);
 void writeValuesToFile(GraphValues *graphValues);
-void readValuesFromFile(GraphValues* graphValues);
+bool readValuesFromFile(GraphValues* graphValues);
 
 
 #endif //P_1_UTILITY_H
