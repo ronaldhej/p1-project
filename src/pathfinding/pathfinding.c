@@ -89,25 +89,25 @@ int accumulateTime(const int pred[], int cost[], int v, int dest, int src) {
 
 int dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     int dist[v], pred[v], cost[v*v];
-    int count, i;
+    int count, i, j;
     bool visited[v];
 
     //populate cost matrix
-    for (i = 0; i < v*v; i++) {
+    for (i = 0; i < v; i++)
+    for (j = 0; j < v; j++) {
         //weird inverse indexing
-        int x = (int) floor((double) i / (double) v);
-        int y = i % v;
-        cost[i] = INFINITY;
-
-        int adjIndex = indexFromCoords(x,y,v);
+        int adjIndex = indexFromCoords(i,j,v);
         int t_transit = adjMatrix[adjIndex].timeInTransit;
+
+        cost[adjIndex] = INFINITY;
+
         t_transit += adjMatrix[adjIndex].dwellDeparture;
         t_transit += adjMatrix[adjIndex].dwellArrival;
         //add cost for rail
         if (!adjMatrix[adjIndex].isAir && t_transit > 0) {
             //alternating x and y is to ensure symmetry
-            cost[indexFromCoords(x, y,v)] = t_transit;
-            cost[indexFromCoords(y,x,v)] = t_transit;
+            cost[indexFromCoords(i, j,v)] = t_transit;
+            cost[indexFromCoords(j,i,v)] = t_transit;
         }
 
         //air is not allowed -> iteration is done
@@ -115,8 +115,8 @@ int dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
 
         //add cost for air
         if (adjMatrix[adjIndex].isAir && t_transit > 0) {
-            cost[indexFromCoords(x, y,v)] = t_transit;
-            cost[indexFromCoords(y,x,v)] = t_transit;
+            cost[indexFromCoords(i,j,v)] = t_transit;
+            cost[indexFromCoords(j,i,v)] = t_transit;
         }
     }
 
