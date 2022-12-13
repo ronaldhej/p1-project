@@ -172,10 +172,10 @@ bool readValuesFromFile(GraphValues* graphValues) {
     }
 
     fscanf(file, "%d", &graphValues->numVertices);
-    fscanf(file, "%d" , &graphValues->numEdges);
-    fscanf(file, "%d" , &graphValues->maxHubs);
-    fscanf(file, "%d" , &graphValues->maxAirRoutes);
-    fscanf(file, "%d" , &graphValues->maxAirRoutes);
+    fscanf(file, "%d", &graphValues->numEdges);
+    fscanf(file, "%d", &graphValues->maxHubs);
+    fscanf(file, "%d", &graphValues->maxAirRoutes);
+    fscanf(file, "%d", &graphValues->maxAirRoutes);
 
     fclose(file);
     return true;
