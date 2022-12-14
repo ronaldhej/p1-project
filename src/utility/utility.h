@@ -25,6 +25,8 @@ void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int 
 bool validateGraphValues(GraphValues *graphValues);
 void writeValuesToFile(GraphValues *graphValues);
 bool readValuesFromFile(GraphValues* graphValues);
+void calculateRoutes(Edge *adjMatrix, int numVertices, Input* input);
+void setupGraphValues(GraphValues *graphValues);
 
 
 #endif //P_1_UTILITY_H

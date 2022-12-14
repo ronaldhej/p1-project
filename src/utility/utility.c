@@ -3,22 +3,7 @@
 
 #include "../graph/graph.h"
 #include "../pathfinding/pathfinding.h"
-
-typedef struct {
-    char option;
-    int startingLocation;
-    int finalDestination;
-} Input;
-
-typedef struct {
-    int numVertices;
-    int numEdges;
-    int maxHubs;
-    int maxAirRoutes;
-} GraphValues;
-
-void writeValuesToFile(GraphValues *graphValues);
-bool readValuesFromFile(GraphValues* graphValues);
+#include "../utility/utility.h"
 
 //prints the initial text, informing the user of how to interact with the program
 void printUserManual() {
@@ -43,60 +28,6 @@ Input* readInput() {
     //ask for Input until Input option is valid
 
     return userInput;
-}
-
-//Enter anything to continue.
-//Used to give the user a chance to view outputs
-void waitForUser() {
-    printf("\nEnter anything to continue:\n");
-    char _;
-    scanf(" %c", &_);
-}
-
-void calculateRoutes(Edge *adjMatrix, int numVertices, Input* input) {
-    //run dijkstra on adjacency matrix using both modes of transportation
-    printf("\ntravelling from %d to %d\n", input->startingLocation, input->finalDestination);
-    dijkstra(adjMatrix,
-             numVertices,
-             input->startingLocation,
-             input->finalDestination,
-             false);
-
-    dijkstra(adjMatrix,
-             numVertices,
-             input->startingLocation,
-             input->finalDestination,
-             true);
-}
-
-//Simple validation of graph values.
-//In this case making sure no value is zero.
-bool validateGraphValues(GraphValues *graphValues) {
-    if (graphValues->numVertices == 0) return false;
-    if (graphValues->numEdges == 0) return false;
-    if (graphValues->maxHubs == 0) return false;
-    if (graphValues->maxAirRoutes == 0) return false;
-
-    return true;
-}
-
-void setupGraphValues(GraphValues *graphValues) {
-
-    printf("\n_____ Graph setup wizard:\n");
-
-    printf("[1/4] Number of vertices:  ");
-    scanf(" %d", &graphValues->numVertices);
-
-    printf("[2/4] Number of edges:  ");
-    scanf(" %d", &graphValues->numEdges);
-
-    printf("[3/4] Number of airport hubs: ");
-    scanf(" %d", &graphValues->maxHubs);
-
-    printf("[4/4] Maximum air routes per airport hub: ");
-    scanf(" %d", &graphValues->maxAirRoutes);
-
-    writeValuesToFile(graphValues);
 }
 
 //Different behavior determined by option.
@@ -153,6 +84,49 @@ void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int 
     }
 }
 
+void setupGraphValues(GraphValues *graphValues) {
+
+    printf("\n_____ Graph setup wizard:\n");
+
+    printf("[1/4] Number of vertices:  ");
+    scanf(" %d", &graphValues->numVertices);
+
+    printf("[2/4] Number of edges:  ");
+    scanf(" %d", &graphValues->numEdges);
+
+    printf("[3/4] Number of airport hubs: ");
+    scanf(" %d", &graphValues->maxHubs);
+
+    printf("[4/4] Maximum air routes per airport hub: ");
+    scanf(" %d", &graphValues->maxAirRoutes);
+
+    writeValuesToFile(graphValues);
+}
+
+void calculateRoutes(Edge *adjMatrix, int numVertices, Input* input) {
+    //run dijkstra on adjacency matrix using both modes of transportation
+    printf("\ntravelling from %d to %d\n", input->startingLocation, input->finalDestination);
+    dijkstra(adjMatrix,
+             numVertices,
+             input->startingLocation,
+             input->finalDestination,
+             false);
+
+    dijkstra(adjMatrix,
+             numVertices,
+             input->startingLocation,
+             input->finalDestination,
+             true);
+}
+
+//Enter anything to continue.
+//Used to give the user a chance to view outputs
+void waitForUser() {
+    printf("\nEnter anything to continue:\n");
+    char _;
+    scanf(" %c", &_);
+}
+
 //graph values functions
 bool readValuesFromFile(GraphValues* graphValues) {
     graphValues->numVertices = 0;
@@ -172,6 +146,17 @@ bool readValuesFromFile(GraphValues* graphValues) {
     fscanf(file, "%d", &graphValues->maxAirRoutes);
 
     fclose(file);
+    return true;
+}
+
+//Simple validation of graph values.
+//In this case making sure no value is zero.
+bool validateGraphValues(GraphValues *graphValues) {
+    if (graphValues->numVertices == 0) return false;
+    if (graphValues->numEdges == 0) return false;
+    if (graphValues->maxHubs == 0) return false;
+    if (graphValues->maxAirRoutes == 0) return false;
+
     return true;
 }
 
