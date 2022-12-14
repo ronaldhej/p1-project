@@ -1,7 +1,4 @@
 #pragma once
-//
-// Created by ronaldj on 11/7/22.
-//
 
 #ifndef P_1_GRAPH_H
 #define P_1_GRAPH_H

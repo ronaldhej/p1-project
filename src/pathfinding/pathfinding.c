@@ -1,17 +1,10 @@
-//
-// Created by sande on 11/24/2022.
-//
 #include<stdio.h>
 #include<stdbool.h>
-#include<stdlib.h>
-#include <math.h>
 
 #include "../graph/graph.h"
 #include "../pathfinding/pathfinding.h"
 
-#define V 10
 #define INFINITY 9999
-#define DOOR_TO_DOOR true
 
 int dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     int dist[v], pred[v], cost[v*v];

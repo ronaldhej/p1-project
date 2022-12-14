@@ -1,22 +1,17 @@
-
 #include "./graph/graph.h"
 #include "./utility/utility.h"
 #include "./pathfinding/pathfinding.h"
 
-#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
-int randomTimeInTransit() {
-    return (rand() % 300) + 60;
-}
+//replace SEED with desired number
+#define SEED 1234
 
 int main() {
     setbuf(stdout, 0); //enables console output when debugging
     int numVertices = 0;
-
-    //Replace seed with desired number
-    int seed = 1234;
 
     Input *userInput;
     GraphValues *graphValues = malloc(sizeof(GraphValues));
@@ -30,7 +25,7 @@ int main() {
                 graphValues->numEdges,
                 graphValues->maxHubs,
                 graphValues->maxAirRoutes,
-                adjMatrix,seed, outFile);
+                adjMatrix,SEED, outFile);
     } else {
         printf("No graph exists, please generate a graph before travelling");
     }
@@ -49,7 +44,7 @@ int main() {
                     graphValues->maxHubs,
                     graphValues->maxAirRoutes,
                     adjMatrix,
-                    seed,
+                    SEED,
                     outFile);
             numVertices = graphValues->numVertices;
 

@@ -1,7 +1,3 @@
-//
-// Created by ronaldj on 11/7/22.
-//
-#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
