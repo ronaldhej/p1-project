@@ -117,16 +117,17 @@ void printGraph(int v,
 
     fprintf(fp, "graph G {\n");
     fprintf(fp, "\tlayout=fdp\n\tsplines=true\n\tK=2\n\tnode [shape=circle]\n");
+    //write connections to file
     for (i = 1; i < v; i++)
         for (j = i + 1; j <= v; j++) {
             index = (i - 1) * v + j - 1;
-            if (adjMatrix[index].timeInTransit) {
-                int weight = adjMatrix[index].timeInTransit;
-                if (adjMatrix[index].isAir) {
-                    fprintf(fp, "%5d -- %5d [label=%5d, weight=%5d, color=red]\n", i, j, weight, weight);
-                } else {
-                    fprintf(fp, "%5d -- %5d [label=%5d, weight=%5d]\n", i, j, weight, weight);
-                }
+            int weight = adjMatrix[index].timeInTransit;
+            if (!weight) continue; //skip iteration if undefined
+
+            if (adjMatrix[index].isAir) {
+                fprintf(fp, "%5d -- %5d [label=%5d, weight=%5d, color=red]\n", i, j, weight, weight);
+            } else {
+                fprintf(fp, "%5d -- %5d [label=%5d, weight=%5d]\n", i, j, weight, weight);
             }
         }
     fprintf(fp, "}");
