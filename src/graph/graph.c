@@ -154,7 +154,6 @@ void printGraph(int v,
 //connected graph
 void randomConnectedGraph(int numVertices,
                             int numEdges,
-                            int maxWgt,
                             int airportNum,
                             int maxAirRoutesPerHub,
                             Edge *adjMatrix,
@@ -259,6 +258,7 @@ void randomConnectedGraph(int numVertices,
     printGraph(numVertices, count, outFile, adjMatrix);
 
     system("dot -Tsvg graph.gv -o output.svg");
+    system("dot -Tpng graph.gv -o output.png");
 
     /*
 

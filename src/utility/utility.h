@@ -14,7 +14,6 @@ typedef struct {
 typedef struct {
     int numVertices;
     int numEdges;
-    int maxWeight;
     int maxHubs;
     int maxAirRoutes;
 } GraphValues;

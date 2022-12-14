@@ -28,7 +28,6 @@ int main() {
         randomConnectedGraph(
                 graphValues->numVertices,
                 graphValues->numEdges,
-                graphValues->maxWeight,
                 graphValues->maxHubs,
                 graphValues->maxAirRoutes,
                 adjMatrix,seed, outFile);
@@ -47,7 +46,6 @@ int main() {
             randomConnectedGraph(
                     graphValues->numVertices,
                     graphValues->numEdges,
-                    graphValues->maxWeight,
                     graphValues->maxHubs,
                     graphValues->maxAirRoutes,
                     adjMatrix,
@@ -57,7 +55,6 @@ int main() {
 
             graphValues->numVertices = 0;
             graphValues->numEdges = 0;
-            graphValues->maxWeight = 0;
             graphValues->maxHubs = 0;
             graphValues->maxAirRoutes = 0;
         }

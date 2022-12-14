@@ -13,7 +13,6 @@ typedef struct {
 typedef struct {
     int numVertices;
     int numEdges;
-    int maxWeight;
     int maxHubs;
     int maxAirRoutes;
 } GraphValues;
@@ -85,19 +84,16 @@ void setupGraphValues(GraphValues *graphValues) {
 
     printf("\n_____ Graph setup wizard:\n");
 
-    printf("[1/5] Number of vertices:  ");
+    printf("[1/4] Number of vertices:  ");
     scanf(" %d", &graphValues->numVertices);
 
-    printf("[2/5] Number of edges:  ");
+    printf("[2/4] Number of edges:  ");
     scanf(" %d", &graphValues->numEdges);
 
-    printf("[3/5] Maximum value for weights: ");
-    scanf(" %d", &graphValues->maxWeight);
-
-    printf("[4/5] Number of airport hubs: ");
+    printf("[3/4] Number of airport hubs: ");
     scanf(" %d", &graphValues->maxHubs);
 
-    printf("[5/5] Maximum air routes per airport hub: ");
+    printf("[4/4] Maximum air routes per airport hub: ");
     scanf(" %d", &graphValues->maxAirRoutes);
 
     writeValuesToFile(graphValues);
@@ -161,7 +157,6 @@ void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int 
 bool readValuesFromFile(GraphValues* graphValues) {
     graphValues->numVertices = 0;
     graphValues->numEdges = 0;
-    graphValues->maxWeight = 0;
     graphValues->maxHubs = 0;
     graphValues->maxAirRoutes = 0;
 
@@ -174,7 +169,6 @@ bool readValuesFromFile(GraphValues* graphValues) {
     fscanf(file, "%d", &graphValues->numVertices);
     fscanf(file, "%d", &graphValues->numEdges);
     fscanf(file, "%d", &graphValues->maxHubs);
-    fscanf(file, "%d", &graphValues->maxAirRoutes);
     fscanf(file, "%d", &graphValues->maxAirRoutes);
 
     fclose(file);

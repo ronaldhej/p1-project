@@ -19,7 +19,6 @@ Edge* initializeAdjMatrix(int numVertices);
 
 void randomConnectedGraph(int numNodes,
                           int numEdges,
-                          int maxWgt,
                           int airportNum,
                           int maxAirRoutesPerHub,
                           Edge *adjMatrix,
