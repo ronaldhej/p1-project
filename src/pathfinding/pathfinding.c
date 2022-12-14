@@ -1,12 +1,13 @@
-#include<stdio.h>
-#include<stdbool.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <math.h>
 
 #include "../graph/graph.h"
 #include "../pathfinding/pathfinding.h"
 
 #define INFINITY 9999
 
-int dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
+void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     int dist[v], pred[v], cost[v*v];
     int count, i, j;
     bool visited[v];
@@ -97,7 +98,8 @@ int dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     printf(" <- %d", src+1);
 
     int timeInMinutes = accumulateTime(pred, cost, v, dest, src);
-    printf("\nTotal travel time : %d minutes\n", timeInMinutes); //TODO: print more detailed journey
+    printf("\nTotal travel time : ");
+    printMinutes(timeInMinutes);
 }
 
 //convert 2D array coords to 1D array index
@@ -174,4 +176,17 @@ void printMatrix(int matrix[], int length) {
         else
             printf("\t");
     }
+}
+
+//prints minutes as hours and remaining minutes
+void printMinutes(int minutes) {
+    int hours = (int) floor((double) minutes / 60.0);
+    minutes %= 60;
+
+    if (hours <= 0) {
+        printf("%d minutes\n", minutes);
+        return;
+    }
+
+    printf("%d hours and %d minutes\n", hours, minutes);
 }
