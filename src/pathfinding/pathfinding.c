@@ -101,8 +101,11 @@ int dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
 
         cost[adjIndex] = INFINITY;
 
-        t_transit += adjMatrix[adjIndex].dwellDeparture;
-        t_transit += adjMatrix[adjIndex].dwellArrival;
+        if(t_transit > 0) {
+            t_transit += adjMatrix[adjIndex].dwellDeparture;
+            t_transit += adjMatrix[adjIndex].dwellArrival;
+        }
+
         //add cost for rail
         if (!adjMatrix[adjIndex].isAir && t_transit > 0) {
             //alternating x and y is to ensure symmetry
