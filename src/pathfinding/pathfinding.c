@@ -7,85 +7,11 @@
 #include <math.h>
 
 #include "../graph/graph.h"
+#include "../pathfinding/pathfinding.h"
 
 #define V 10
 #define INFINITY 9999
 #define DOOR_TO_DOOR true
-
-//convert 2D array coords to 1D array index
-int indexFromCoords(int x, int y, int rowLength) {
-    return y * rowLength + x;
-}
-
-void printMatrix(int matrix[], int length) {
-    for (int i = 0; i < length*length; i++) {
-        if (matrix[i] == INFINITY) {
-            printf("_");
-        } else {
-            printf("%d", matrix[i]);
-        }
-
-        if ((i+1) % length == 0 && i > 0)
-            printf("\n");
-        else
-            printf("\t");
-    }
-}
-
-//return unvisited vertex with shortest distance to source
-int shortestUnvisitedVertex(int const dist[], bool const visited[], int numVertex) {
-    int min = INFINITY;
-    int bestVert = -1;
-
-    for (int i = 0; i < numVertex; i++) {
-        //compare vert to current best vert
-        if (!visited[i] && dist[i] < min) {
-            min = dist[i];
-            bestVert = i;
-        }
-    }
-
-    return bestVert;
-}
-
-bool fullyVisited(bool visited[], int numVertices) {
-    //return false if unvisited vertex exists
-    for (int i = 0; i < numVertices; i++) {
-        if (visited[i] == false) return false;
-    }
-    return true;
-}
-
-void examineVertex(int vertIndex, int currentVert, int vert, const int cost[], int dist[], int pred[], bool visited[]) {
-
-    if (cost[vertIndex] < INFINITY && !visited[vert]) {
-        int newDist = dist[currentVert] + cost[vertIndex];
-        if (newDist < dist[vert]) {
-            dist[vert] = newDist;
-            pred[vert] = currentVert;
-        }
-    }
-}
-
-//calculate total travel time of journey in minutes
-int accumulateTime(const int pred[], int cost[], int v, int dest, int src) {
-    int t_accumulated = 0;
-    int toVertex = dest;
-    int fromVertex = pred[toVertex];
-
-    //iterate through every section of a journey
-    while (toVertex != src) {
-
-        int edgeTime = cost[indexFromCoords(toVertex, fromVertex, v)];
-        //add time of transit
-        t_accumulated += edgeTime;
-
-        toVertex = fromVertex;
-        fromVertex = (fromVertex != src) ? pred[fromVertex] : src;
-    }
-
-    return t_accumulated;
-}
 
 int dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     int dist[v], pred[v], cost[v*v];
@@ -179,4 +105,80 @@ int dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
 
     int timeInMinutes = accumulateTime(pred, cost, v, dest, src);
     printf("\nTotal travel time : %d minutes\n", timeInMinutes); //TODO: print more detailed journey
+}
+
+//convert 2D array coords to 1D array index
+int indexFromCoords(int x, int y, int rowLength) {
+    return y * rowLength + x;
+}
+
+bool fullyVisited(bool visited[], int numVertices) {
+    //return false if unvisited vertex exists
+    for (int i = 0; i < numVertices; i++) {
+        if (visited[i] == false) return false;
+    }
+    return true;
+}
+
+void examineVertex(int vertIndex, int currentVert, int vert, const int cost[], int dist[], int pred[], bool visited[]) {
+
+    if (cost[vertIndex] < INFINITY && !visited[vert]) {
+        int newDist = dist[currentVert] + cost[vertIndex];
+        if (newDist < dist[vert]) {
+            dist[vert] = newDist;
+            pred[vert] = currentVert;
+        }
+    }
+}
+
+//return unvisited vertex with shortest distance to source
+int shortestUnvisitedVertex(int const dist[], bool const visited[], int numVertex) {
+    int min = INFINITY;
+    int bestVert = -1;
+
+    for (int i = 0; i < numVertex; i++) {
+        //compare vert to current best vert
+        if (!visited[i] && dist[i] < min) {
+            min = dist[i];
+            bestVert = i;
+        }
+    }
+
+    return bestVert;
+}
+
+//calculate total travel time of journey in minutes
+int accumulateTime(const int pred[], int cost[], int v, int dest, int src) {
+    int t_accumulated = 0;
+    int toVertex = dest;
+    int fromVertex = pred[toVertex];
+
+    //iterate through every section of a journey
+    while (toVertex != src) {
+
+        int edgeTime = cost[indexFromCoords(toVertex, fromVertex, v)];
+        //add time of transit
+        t_accumulated += edgeTime;
+
+        toVertex = fromVertex;
+        fromVertex = (fromVertex != src) ? pred[fromVertex] : src;
+    }
+
+    return t_accumulated;
+}
+
+//only used for debugging
+void printMatrix(int matrix[], int length) {
+    for (int i = 0; i < length*length; i++) {
+        if (matrix[i] == INFINITY) {
+            printf("_");
+        } else {
+            printf("%d", matrix[i]);
+        }
+
+        if ((i+1) % length == 0 && i > 0)
+            printf("\n");
+        else
+            printf("\t");
+    }
 }
