@@ -3,8 +3,8 @@
 
 typedef struct {
     char option;
-    char startingLocation[8];
-    char finalDestination[8];
+    int startingLocation;
+    int finalDestination;
 } Input;
 
 typedef struct {
