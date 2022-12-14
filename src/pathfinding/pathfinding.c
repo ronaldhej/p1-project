@@ -146,8 +146,7 @@ int dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
 
     //visit vertices
     int currentVert = src;
-    while(1) {
-        if (count >= 100000) break; //FAILSAFE
+    while(!fullyVisited(visited, v)) {
 
         //examine adjacent vertices
         for (int vert = 0; vert < v; vert++) {
@@ -156,7 +155,6 @@ int dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
         }
 
         //visit next vertex unless graph has been fully visited
-        if (fullyVisited(visited, v)) break; //<- probably belongs inside while statement
         currentVert = shortestUnvisitedVertex(dist, visited, v);
         visited[currentVert] = true;
         count++;
