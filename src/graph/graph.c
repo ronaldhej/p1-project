@@ -7,12 +7,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-typedef struct {
-    int timeInTransit;
-    bool isAir;
-    int dwellDeparture;
-    int dwellArrival;
-} Edge;
+#include "../graph/graph.h"
 
 //time constants for airports in minutes
 #define A_TRANSFER_TO_LOCATION      57
@@ -27,27 +22,6 @@ typedef struct {
 #define R_AVERAGE_TRANSIT           198
 #define R_DWELL_AT_DESTINATION      12
 #define R_TRANSFER_FROM_DESTINATION 21
-
-//returns a random signed offset using simple bell curve equation
-int bellcurveSpread(int spread) {
-    //random number between 0-1;
-    int decimalCount = 100;
-    double x = (double)(rand() % decimalCount) / decimalCount;
-
-    //bellcurve equation
-    double offset = 1.0/pow(1+pow(x, 2.0),(3.0/2.0));
-
-    //inverse offset
-    offset = 1-offset;
-    offset *= spread;
-
-    //50% chance of offset being negative
-    if (rand() % 2 == 1) {
-        offset *= -1;
-    }
-
-    return (int)round(offset);
-}
 
 //initialize adjacency matrix and return the pointer
 //allocates memory for numVertices*numVertices Edges
@@ -74,82 +48,6 @@ Edge* initializeAdjMatrix(int numVertices) {
 //  Full disclosure, a lot of this code is from  Richard Johnsonbaugh and Martin Kalin from the
 //  Department of Computer Science and Information Systems, they have a great way of generating
 //  connected graphs, it has however been modified to fit our use case
-
-void initArray(int *a, int end) {
-    int i;
-
-    for (i = 0; i < end; i++)
-        *a++ = i;
-}
-
-/* Return a random integer between 0 and k-1 inclusive. */
-int ran(int k) {
-    return rand() % k;
-}
-
-void swap(int *a, int *b) {
-    int temp;
-
-    temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-void permute(int *a, int n) {
-    int i;
-
-    for (i = 0; i < n - 1; i++)
-        swap(a + i + ran(n - i), a + i);
-}
-
-void printGraph(int v,
-                int e,
-                char *out_file,
-                Edge *adjMatrix) {
-    int i, j, index;
-    FILE *fp;
-
-    if ((fp = fopen(out_file, "w")) == NULL) {
-        printf("Unable to open file %s for writing.\n", out_file);
-        return;
-    }
-    printf("\n\tWriting graph to file %s.\n", out_file);
-
-    fprintf(fp, "graph G {\n");
-    fprintf(fp, "\tlayout=fdp\n\tsplines=true\n\tK=2\n\tnode [shape=circle]\n");
-    //write connections to file
-    for (i = 1; i < v; i++)
-        for (j = i + 1; j <= v; j++) {
-            index = (i - 1) * v + j - 1;
-            int weight = adjMatrix[index].timeInTransit;
-            if (!weight) continue; //skip iteration if undefined
-
-            if (adjMatrix[index].isAir) {
-                fprintf(fp, "%5d -- %5d [label=%5d, weight=%5d, color=red]\n", i, j, weight, weight);
-            } else {
-                fprintf(fp, "%5d -- %5d [label=%5d, weight=%5d]\n", i, j, weight, weight);
-            }
-        }
-    fprintf(fp, "}");
-    fclose(fp);
-    printf("\tGraph is written to file %s.\n", out_file);
-
-    printf("graph G {\n");
-    printf("\tlayout=fdp\n\tsplines=true\n\tK=2\n\tnode [shape=circle]\n");
-    for (i = 1; i < v; i++)
-        for (j = i + 1; j <= v; j++) {
-            index = (i - 1) * v + j - 1;
-            if (adjMatrix[index].timeInTransit) {
-                int weight = adjMatrix[index].timeInTransit;
-                if (adjMatrix[index].isAir) {
-                    printf("%5d -- %5d [label=%5d, weight=%5d, color=red]\n", i, j, weight, weight);
-                } else {
-                    printf("%5d -- %5d [label=%5d, weight=%5d]\n", i, j, weight, weight);
-                }
-            }
-        }
-    printf("}");
-}
 
 //connected graph
 void randomConnectedGraph(int numVertices,
@@ -260,14 +158,102 @@ void randomConnectedGraph(int numVertices,
     system("dot -Tsvg graph.gv -o output.svg");
     system("dot -Tpng graph.gv -o output.png");
 
-    /*
-
-    printf("Printed pathfinding \n");
-    dijkstra(adjMatrix,
-             numVertices,
-             1,
-             2,
-             false);
-*/
     free(tree);
+}
+
+void initArray(int *a, int end) {
+    int i;
+
+    for (i = 0; i < end; i++)
+        *a++ = i;
+}
+
+void permute(int *a, int n) {
+    int i;
+
+    for (i = 0; i < n - 1; i++)
+        swap(a + i + ran(n - i), a + i);
+}
+
+void swap(int *a, int *b) {
+    int temp;
+
+    temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+/* Return a random integer between 0 and k-1 inclusive. */
+int ran(int k) {
+    return rand() % k;
+}
+
+//returns a random signed offset using simple bell curve equation
+int bellcurveSpread(int spread) {
+    //random number between 0-1;
+    int decimalCount = 100;
+    double x = (double)(rand() % decimalCount) / decimalCount;
+
+    //bellcurve equation
+    double offset = 1.0/pow(1+pow(x, 2.0),(3.0/2.0));
+
+    //inverse offset
+    offset = 1-offset;
+    offset *= spread;
+
+    //50% chance of offset being negative
+    if (rand() % 2 == 1) {
+        offset *= -1;
+    }
+
+    return (int)round(offset);
+}
+
+void printGraph(int v,
+                int e,
+                char *out_file,
+                Edge *adjMatrix) {
+    int i, j, index;
+    FILE *fp;
+
+    if ((fp = fopen(out_file, "w")) == NULL) {
+        printf("Unable to open file %s for writing.\n", out_file);
+        return;
+    }
+    printf("\n\tWriting graph to file %s.\n", out_file);
+
+    fprintf(fp, "graph G {\n");
+    fprintf(fp, "\tlayout=fdp\n\tsplines=true\n\tK=2\n\tnode [shape=circle]\n");
+    //write connections to file
+    for (i = 1; i < v; i++)
+        for (j = i + 1; j <= v; j++) {
+            index = (i - 1) * v + j - 1;
+            int weight = adjMatrix[index].timeInTransit;
+            if (!weight) continue; //skip iteration if undefined
+
+            if (adjMatrix[index].isAir) {
+                fprintf(fp, "%5d -- %5d [label=%5d, weight=%5d, color=red]\n", i, j, weight, weight);
+            } else {
+                fprintf(fp, "%5d -- %5d [label=%5d, weight=%5d]\n", i, j, weight, weight);
+            }
+        }
+    fprintf(fp, "}");
+    fclose(fp);
+    printf("\tGraph is written to file %s.\n", out_file);
+
+    printf("graph G {\n");
+    printf("\tlayout=fdp\n\tsplines=true\n\tK=2\n\tnode [shape=circle]\n");
+    for (i = 1; i < v; i++)
+        for (j = i + 1; j <= v; j++) {
+            index = (i - 1) * v + j - 1;
+            if (adjMatrix[index].timeInTransit) {
+                int weight = adjMatrix[index].timeInTransit;
+                if (adjMatrix[index].isAir) {
+                    printf("%5d -- %5d [label=%5d, weight=%5d, color=red]\n", i, j, weight, weight);
+                } else {
+                    printf("%5d -- %5d [label=%5d, weight=%5d]\n", i, j, weight, weight);
+                }
+            }
+        }
+    printf("}");
 }

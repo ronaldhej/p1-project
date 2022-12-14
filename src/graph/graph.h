@@ -25,4 +25,15 @@ void randomConnectedGraph(int numNodes,
                           int seed,
                           char *outFile);
 
+void initArray(int *a, int end);
+void permute(int *a, int n);
+int bellcurveSpread(int spread);
+int ran(int k);
+void swap(int *a, int *b);
+
+void printGraph(int v,
+                int e,
+                char *out_file,
+                Edge *adjMatrix);
+
 #endif //P_1_GRAPH_H
