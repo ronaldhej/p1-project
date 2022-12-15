@@ -151,10 +151,7 @@ int accumulateTime(const int pred[], int cost[], int v, int dest, int src) {
     //iterate through every section of a journey
     while (toVertex != src) {
 
-
         int edgeTime = cost[indexFromCoords(toVertex, fromVertex, v)];
-        printf("\n");
-        printf("from %d to %d costs %d\n", fromVertex+1, toVertex+1, edgeTime);
         //add time of transit
         t_accumulated += edgeTime;
 
