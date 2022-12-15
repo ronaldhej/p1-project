@@ -15,7 +15,7 @@ void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     //populate cost matrix
     for (i = 0; i < v; i++)
     for (j = 0; j < v; j++) {
-        //weird inverse indexing
+        //indexing from 2D coordinates
         int adjIndex = indexFromCoords(i,j,v);
         int t_transit = adjMatrix[adjIndex].timeInTransit;
 
