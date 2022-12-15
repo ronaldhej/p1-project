@@ -206,7 +206,6 @@ int bellcurveSpread(int spread) {
 }
 
 void printGraph(int v,
-                int e,
                 char *out_file,
                 Edge *adjMatrix) {
     int i, j, index;
