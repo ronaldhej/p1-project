@@ -149,7 +149,7 @@ void randomConnectedGraph(int numVertices,
 
     }
     printf("Printed Graph \n");
-    printGraph(numVertices, count, outFile, adjMatrix);
+    printGraph(numVertices, outFile, adjMatrix);
 
     system("dot -Tsvg graph.gv -o output.svg");
     system("dot -Tpng graph.gv -o output.png");

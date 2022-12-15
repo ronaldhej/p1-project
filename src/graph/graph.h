@@ -29,7 +29,6 @@ int ran(int k);
 void swap(int *a, int *b);
 
 void printGraph(int v,
-                int e,
                 char *out_file,
                 Edge *adjMatrix);
 
