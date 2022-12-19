@@ -62,6 +62,15 @@ void handleOption(Input *_input, GraphValues *graphValues, Edge *adjMatrix, int 
                 printf("nVertices is undeclared!\n");
                 break;
             }
+
+            if(_input->startingLocation < 1 ||
+               _input->startingLocation > *numVertices ||
+               _input->finalDestination < 1 ||
+               _input->finalDestination > *numVertices) {
+                printf("Invalid inputs. Please enter integers between 1 and %d.\n", *numVertices);
+                break;
+            }
+
             calculateRoutes(adjMatrix, *numVertices, _input);
 
             break;
