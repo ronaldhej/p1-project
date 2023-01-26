@@ -113,7 +113,12 @@ bool fullyVisited(bool visited[], int numVertices) {
     return true;
 }
 
-void examineVertex(int vertIndex, int currentVert, int vert, const int cost[], int dist[], int pred[], bool visited[]) {
+void examineVertex(int vertIndex,
+                   int currentVert,
+                   int vert, const int cost[],
+                   int dist[],
+                   int pred[],
+                   bool visited[]) {
 
     if (cost[vertIndex] < INFINITY && !visited[vert]) {
         int newDist = dist[currentVert] + cost[vertIndex];
