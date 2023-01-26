@@ -9,7 +9,7 @@
 
 void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
     int dist[v], pred[v], cost[v*v];
-    int count, i, j;
+    int i, j;
     bool visited[v];
 
     //populate cost matrix
@@ -62,7 +62,6 @@ void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
 
     dist[src] = 0;
     visited[src] = true;
-    count = 1;
 
     //visit vertices
     int currentVert = src;
@@ -77,7 +76,6 @@ void dijkstra(Edge adjMatrix[], int v, int src, int dest, bool airAllowed) {
         //visit next vertex unless graph has been fully visited
         currentVert = shortestUnvisitedVertex(dist, visited, v);
         visited[currentVert] = true;
-        count++;
     }
     //printf("\ncount:%d\n", count);
 
