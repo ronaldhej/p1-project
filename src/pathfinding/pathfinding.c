@@ -115,7 +115,8 @@ bool fullyVisited(bool visited[], int numVertices) {
 
 void examineVertex(int vertIndex,
                    int currentVert,
-                   int vert, const int cost[],
+                   int vert,
+                   const int cost[],
                    int dist[],
                    int pred[],
                    bool visited[]) {
